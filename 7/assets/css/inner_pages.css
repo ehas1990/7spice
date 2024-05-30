@@ -1238,8 +1238,8 @@
   right: 3vw;
 }
 .home-st1 .swiper-button-next:after {
-  font-family: "Font Awesome 6 Pro";
-  content: "" !important;
+  /* font-family: "Font Awesome 6 Pro";
+  content: "" !important; */
   font-weight: 100;
 }
 .home-st1 .swiper-button-prev {
