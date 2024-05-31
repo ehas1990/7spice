@@ -2441,3 +2441,78 @@ input:focus {
 .hover-white:hover * {
   color: #fff;
 }
+.butn.size-1 {
+  width: 170px;
+  padding: 15px;
+  border-style: none !important;
+}
+@media only screen 
+  and (min-device-width: 210px) 
+  and (max-device-width:320px)
+{
+
+.text.text-white.my-5.fsz-20.px-lg-5.mx-lg-5 {
+	font-size: 15px !important;
+	margin-top: 4% !important;
+}
+.home-st1 .swiper-button-next, .home-st1 .swiper-button-prev
+{
+  display: none !important;
+}
+.btns {
+  display: flex !important;
+}
+}
+@media only screen 
+  and (min-device-width: 320px) 
+  and (max-device-width: 480px)
+{
+.text.text-white.my-5.fsz-20.px-lg-5.mx-lg-5 {
+	font-size: 15px !important;
+	margin-top: 4% !important;
+}
+.home-st1 .swiper-button-next, .home-st1 .swiper-button-prev
+{
+  display: none !important;
+}
+.btns {
+  display: flex !important;
+}
+}
+@media only screen 
+  and (min-device-width:480px) 
+  and (max-device-width:620px)
+{
+.text.text-white.my-5.fsz-20.px-lg-5.mx-lg-5 {
+	font-size: 15px !important;
+	margin-top: 4% !important;
+}
+}
+@media only screen 
+  and (min-device-width:620px) 
+  and (max-device-width:720px)
+  {
+.text.text-white.my-5.fsz-20.px-lg-5.mx-lg-5 {
+	font-size: 15px !important;
+	margin-top: 4% !important;
+}
+  }
+@media only screen 
+  and (min-device-width:720px) 
+  and (max-device-width:820px)
+  {
+
+
+}
+@media only screen 
+  and (min-device-width:820px) 
+  and (max-device-width:1200px)
+  {
+
+
+
+
+
+}
+
+
