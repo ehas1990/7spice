@@ -9,10 +9,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $message = $_POST['message'];
 
     // Recipient email address
-    $to = "info@billiardsinternationalschool.com, ehasalpha@gmail.com";
+    $to = "ehasalpha@gmail.com";
 
     // Email subject
-    $subject = "Contact Form - Billiards International Islamic School";
+    $subject = "Contact Form - Seven Spiece Resturant";
 
     // Email body
     $txt = "Full Name: $fname \r\nContact Number: $fphone \r\nMessage: $message";

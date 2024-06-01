@@ -233,7 +233,7 @@
                     </ul>
                 </div>
                 <div class="nav-icons">
-                    <div class="menu-item">
+                    <div class="nav-item">
                         <a class="nav-link side_menu_btn" href="contact.html"> Contact</a>
                     </div>
                 </div>
@@ -388,46 +388,52 @@
                             <h2 class="fsz-50 mb-20"> Make a Reservation </h2>
                             <div class="text fsz-16"> Get in touch with restaurant </div>
                         </div>
-                        <form action="#" class="form">
+                        <form action="booking.php" method="post" class="form">
                             <div class="row justify-content-center">
-                                <div class="col-lg-5">
+                                <div class="col-lg-3">
                                     <div class="form-group">
-                                        <input type="text" placeholder="Full Name" class="form-control">
-                                    </div>
-                                </div>
-                                <div class="col-lg-5">
-                                    <div class="form-group">
-                                        <input type="text" placeholder="(+566 666 777 88 99)" class="form-control">
-                                    </div>
-                                </div>
-                                <div class="col-lg-4">
-                                    <div class="form-group">
-                                        <input type="text" placeholder="16/03/2024" class="form-control">
+                                        <input type="text" name="ename" placeholder="Full Name" class="form-control">
                                     </div>
                                 </div>
                                 <div class="col-lg-3">
                                     <div class="form-group">
-                                        <select name="" id="" class="form-control form-select">
-                                            <option value=""> 6.30 PM </option>
-                                            <option value=""> 7.30 PM </option>
-                                            <option value=""> 9.30 PM </option>
+                                        <input type="text" name="ephone" placeholder="(+566 666 777 88 99)" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-lg-3">
+                                    <div class="form-group">
+                                        <input type="text" name="edate" placeholder="16/03/2024" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-lg-3">
+                                    <div class="form-group">
+                                        <input type="text" name="email" placeholder="yourname@domain.com" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-lg-3">
+                                    <div class="form-group">
+                                        <select  name="etime" class="form-control form-select">
+                                            <option value="6.30"> 6.30 PM </option>
+                                            <option value="7.30"> 7.30 PM </option>
+                                            <option value="9.30"> 9.30 PM </option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col-lg-3">
                                     <div class="form-group">
                                         <div class="form-group">
-                                            <select name="" id="" class="form-control form-select">
-                                                <option value=""> 1 Person </option>
-                                                <option value=""> 2 Person </option>
-                                                <option value=""> 3 Person </option>
+                                            <select  name="eperson" class="form-control form-select">
+                                                <option value="1 Person"> 1 Person </option>
+                                                <option value="2 Person"> 2 Person </option>
+                                                <option value="more than 3">more than  3 Person </option>
                                             </select>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="text-center">
-                                <a href="#" class="butn bg-red1 hover-bg-dark1 text-white rounded-pill size-1 mt-50"> <span> Book a Table + </span> </a>
+                                <input class="butn bg-red1 text-white rounded-pill size-1 hover-bg-black mt-50" type="submit" value=" Book a Table + +">
+                                <!-- <a href="#" class="butn bg-red1 hover-bg-dark1 text-white rounded-pill size-1 mt-50"> <span> Book a Table + </span> </a> -->
                             </div>
                         </form>
                         <img src="assets/img/res_bg.png" alt="" class="bg">

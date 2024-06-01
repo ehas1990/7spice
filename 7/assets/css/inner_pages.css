@@ -452,7 +452,7 @@
 .about-page-st1 .tc-reservation-st5 .reservation-card .form .form-control {
   border: 1px solid #fff2;
   border-radius: 8px;
-  background-color: transparent;
+  background-color: ##1a1919 !important;
   min-height: 50px;
   color: #fff;
 }

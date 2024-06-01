@@ -1,326 +1,4 @@
-        "use strict";
-
-const canvas = document.getElementsByTagName("canvas")[0];
-canvas.width = canvas.clientWidth;
-canvas.height = canvas.clientHeight;
-
-let config = {
-  SIM_RESOLUTION: 128,
-  DYE_RESOLUTION: 512,
-  DENSITY_DISSIPATION: 0.97,
-  VELOCITY_DISSIPATION: 0.98,
-  PRESSURE_DISSIPATION: 0.8,
-  PRESSURE_ITERATIONS: 20,
-  CURL: 30,
-  SPLAT_RADIUS: 0.1,
-  SHADING: false,
-  COLORFUL: false,
-  PAUSED: false,
-  BACK_COLOR: {
-    r: 2,
-    g: 3,
-    b: 15
-  },
-  TRANSPARENT: false,
-  BLOOM: false,
-  BLOOM_ITERATIONS: 8,
-  BLOOM_RESOLUTION: 256,
-  BLOOM_INTENSITY: 0.8,
-  BLOOM_THRESHOLD: 0.6,
-  BLOOM_SOFT_KNEE: 0.7
-};
-
-function pointerPrototype() {
-  this.id = -1;
-  this.x = 0;
-  this.y = 0;
-  this.dx = 0;
-  this.dy = 0;
-  this.down = false;
-  this.moved = false;
-  this.color = [30, 0, 300];
-}
-
-let pointers = [];
-let splatStack = [];
-let bloomFramebuffers = [];
-pointers.push(new pointerPrototype());
-
-const { gl, ext } = getWebGLContext(canvas);
-
-if (isMobile()) config.SHADING = false;
-if (!ext.supportLinearFiltering) {
-  config.SHADING = false;
-  config.BLOOM = false;
-}
-
-//startGUI();
-
-function getWebGLContext(canvas) {
-  const params = {
-    alpha: true,
-    depth: false,
-    stencil: false,
-    antialias: false,
-    preserveDrawingBuffer: false
-  };
-
-  let gl = canvas.getContext("webgl2", params);
-  const isWebGL2 = !!gl;
-  if (!isWebGL2)
-    gl =
-      canvas.getContext("webgl", params) ||
-      canvas.getContext("experimental-webgl", params);
-
-  let halfFloat;
-  let supportLinearFiltering;
-  if (isWebGL2) {
-    gl.getExtension("EXT_color_buffer_float");
-    supportLinearFiltering = gl.getExtension("OES_texture_float_linear");
-  } else {
-    halfFloat = gl.getExtension("OES_texture_half_float");
-    supportLinearFiltering = gl.getExtension("OES_texture_half_float_linear");
-  }
-
-  gl.clearColor(0.0, 0.0, 0.0, 1.0);
-
-  const halfFloatTexType = isWebGL2 ? gl.HALF_FLOAT : halfFloat.HALF_FLOAT_OES;
-  let formatRGBA;
-  let formatRG;
-  let formatR;
-
-  if (isWebGL2) {
-    formatRGBA = getSupportedFormat(gl, gl.RGBA16F, gl.RGBA, halfFloatTexType);
-    formatRG = getSupportedFormat(gl, gl.RG16F, gl.RG, halfFloatTexType);
-    formatR = getSupportedFormat(gl, gl.R16F, gl.RED, halfFloatTexType);
-  } else {
-    formatRGBA = getSupportedFormat(gl, gl.RGBA, gl.RGBA, halfFloatTexType);
-    formatRG = getSupportedFormat(gl, gl.RGBA, gl.RGBA, halfFloatTexType);
-    formatR = getSupportedFormat(gl, gl.RGBA, gl.RGBA, halfFloatTexType);
-  }
-
-  if (formatRGBA == null)
-    ga("send", "event", isWebGL2 ? "webgl2" : "webgl", "not supported");
-  else ga("send", "event", isWebGL2 ? "webgl2" : "webgl", "supported");
-
-  return {
-    gl,
-    ext: {
-      formatRGBA,
-      formatRG,
-      formatR,
-      halfFloatTexType,
-      supportLinearFiltering
-    }
-  };
-}
-
-function getSupportedFormat(gl, internalFormat, format, type) {
-  if (!supportRenderTextureFormat(gl, internalFormat, format, type)) {
-    switch (internalFormat) {
-      case gl.R16F:
-        return getSupportedFormat(gl, gl.RG16F, gl.RG, type);
-      case gl.RG16F:
-        return getSupportedFormat(gl, gl.RGBA16F, gl.RGBA, type);
-      default:
-        return null;
-    }
-  }
-
-  return {
-    internalFormat,
-    format
-  };
-}
-
-function supportRenderTextureFormat(gl, internalFormat, format, type) {
-  let texture = gl.createTexture();
-  gl.bindTexture(gl.TEXTURE_2D, texture);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-  gl.texImage2D(gl.TEXTURE_2D, 0, internalFormat, 4, 4, 0, format, type, null);
-
-  let fbo = gl.createFramebuffer();
-  gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
-  gl.framebufferTexture2D(
-    gl.FRAMEBUFFER,
-    gl.COLOR_ATTACHMENT0,
-    gl.TEXTURE_2D,
-    texture,
-    0
-  );
-
-  const status = gl.checkFramebufferStatus(gl.FRAMEBUFFER);
-  if (status != gl.FRAMEBUFFER_COMPLETE) return false;
-  return true;
-}
-
-function startGUI() {
-  var gui = new dat.GUI({
-    width: 300
-  });
-  gui
-    .add(config, "SIM_RESOLUTION", {
-      "32": 32,
-      "64": 64,
-      "128": 128,
-      "256": 256
-    })
-    .name("sim resolution")
-    .onFinishChange(initFramebuffers);
-  gui
-    .add(config, "DYE_RESOLUTION", {
-      "128": 128,
-      "256": 256,
-      "512": 512,
-      "1024": 1024
-    })
-    .name("dye resolution")
-    .onFinishChange(initFramebuffers);
-  gui.add(config, "DENSITY_DISSIPATION", 0.9, 1.0).name("density diffusion");
-  gui.add(config, "VELOCITY_DISSIPATION", 0.9, 1.0).name("velocity diffusion");
-  gui.add(config, "PRESSURE_DISSIPATION", 0.0, 1.0).name("pressure diffusion");
-  gui.add(config, "CURL", 0, 50).name("vorticity").step(1);
-  gui.add(config, "SPLAT_RADIUS", 0.01, 1.0).name("splat radius");
-  gui.add(config, "SHADING").name("shading");
-  gui.add(config, "COLORFUL").name("colorful");
-  gui.add(config, "PAUSED").name("paused").listen();
-
-  gui
-    .add(
-      {
-        fun: () => {
-          splatStack.push(parseInt(Math.random() * 20) + 5);
-        }
-      },
-      "fun"
-    )
-    .name("Random splats");
-
-  let bloomFolder = gui.addFolder("Bloom");
-  bloomFolder.add(config, "BLOOM").name("enabled");
-  bloomFolder.add(config, "BLOOM_INTENSITY", 0.1, 2.0).name("intensity");
-  bloomFolder.add(config, "BLOOM_THRESHOLD", 0.0, 1.0).name("threshold");
-
-  let captureFolder = gui.addFolder("Capture");
-  captureFolder.addColor(config, "BACK_COLOR").name("background color");
-  captureFolder.add(config, "TRANSPARENT").name("transparent");
-  captureFolder
-    .add(
-      {
-        fun: captureScreenshot
-      },
-      "fun"
-    )
-    .name("take screenshot");
-
-  if (isMobile()) gui.close();
-}
-
-function captureScreenshot() {
-  colorProgram.bind();
-  gl.uniform4f(colorProgram.uniforms.color, 0, 0, 0, 1);
-  blit(density.write.fbo);
-
-  render(density.write.fbo);
-  gl.bindFramebuffer(gl.FRAMEBUFFER, density.write.fbo);
-
-  let length = dyeWidth * dyeHeight * 4;
-  let pixels = new Float32Array(length);
-  gl.readPixels(0, 0, dyeWidth, dyeHeight, gl.RGBA, gl.FLOAT, pixels);
-
-  let newPixels = new Uint8Array(length);
-
-  let id = 0;
-  for (let i = dyeHeight - 1; i >= 0; i--) {
-    for (let j = 0; j < dyeWidth; j++) {
-      let nid = i * dyeWidth * 4 + j * 4;
-      newPixels[nid + 0] = clamp01(pixels[id + 0]) * 255;
-      newPixels[nid + 1] = clamp01(pixels[id + 1]) * 255;
-      newPixels[nid + 2] = clamp01(pixels[id + 2]) * 255;
-      newPixels[nid + 3] = clamp01(pixels[id + 3]) * 255;
-      id += 4;
-    }
-  }
-
-  let captureCanvas = document.createElement("canvas");
-  let ctx = captureCanvas.getContext("2d");
-  captureCanvas.width = dyeWidth;
-  captureCanvas.height = dyeHeight;
-
-  let imageData = ctx.createImageData(dyeWidth, dyeHeight);
-  imageData.data.set(newPixels);
-  ctx.putImageData(imageData, 0, 0);
-  let datauri = captureCanvas.toDataURL();
-
-  downloadURI("fluid.png", datauri);
-
-  URL.revokeObjectURL(datauri);
-}
-
-function clamp01(input) {
-  return Math.min(Math.max(input, 0), 1);
-}
-
-// function downloadURI(filename, uri) {
-//   let link = document.createElement("a");
-//   link.download = filename;
-//   link.href = uri;
-//   document.body.appendChild(link);
-//   link.click();
-//   document.body.removeChild(link);
-// }
-
-function isMobile() {
-  return /Mobi|Android/i.test(navigator.userAgent);
-}
-
-class GLProgram {
-  constructor(vertexShader, fragmentShader) {
-    this.uniforms = {};
-    this.program = gl.createProgram();
-
-    gl.attachShader(this.program, vertexShader);
-    gl.attachShader(this.program, fragmentShader);
-    gl.linkProgram(this.program);
-
-    if (!gl.getProgramParameter(this.program, gl.LINK_STATUS))
-      throw gl.getProgramInfoLog(this.program);
-
-    const uniformCount = gl.getProgramParameter(
-      this.program,
-      gl.ACTIVE_UNIFORMS
-    );
-    for (let i = 0; i < uniformCount; i++) {
-      const uniformName = gl.getActiveUniform(this.program, i).name;
-      this.uniforms[uniformName] = gl.getUniformLocation(
-        this.program,
-        uniformName
-      );
-    }
-  }
-
-  bind() {
-    gl.useProgram(this.program);
-  }
-}
-
-function compileShader(type, source) {
-  const shader = gl.createShader(type);
-  gl.shaderSource(shader, source);
-  gl.compileShader(shader);
-
-  if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS))
-    throw gl.getShaderInfoLog(shader);
-
-  return shader;
-}
-
-const baseVertexShader = compileShader(
-  gl.VERTEX_SHADER,
-  `
+"use strict";const canvas=document.getElementsByTagName("canvas")[0];canvas.width=canvas.clientWidth,canvas.height=canvas.clientHeight;let config={SIM_RESOLUTION:128,DYE_RESOLUTION:512,DENSITY_DISSIPATION:.97,VELOCITY_DISSIPATION:.98,PRESSURE_DISSIPATION:.8,PRESSURE_ITERATIONS:20,CURL:30,SPLAT_RADIUS:.1,SHADING:!1,COLORFUL:!1,PAUSED:!1,BACK_COLOR:{r:2,g:3,b:15},TRANSPARENT:!1,BLOOM:!1,BLOOM_ITERATIONS:8,BLOOM_RESOLUTION:256,BLOOM_INTENSITY:.8,BLOOM_THRESHOLD:.6,BLOOM_SOFT_KNEE:.7};function pointerPrototype(){this.id=-1,this.x=0,this.y=0,this.dx=0,this.dy=0,this.down=!1,this.moved=!1,this.color=[30,0,300]}let pointers=[],splatStack=[],bloomFramebuffers=[];pointers.push(new pointerPrototype);const{gl:e,ext:r}=getWebGLContext(canvas);function getWebGLContext(e){let r={alpha:!0,depth:!1,stencil:!1,antialias:!1,preserveDrawingBuffer:!1},i=e.getContext("webgl2",r),t=!!i;t||(i=e.getContext("webgl",r)||e.getContext("experimental-webgl",r));let o,a;t?(i.getExtension("EXT_color_buffer_float"),a=i.getExtension("OES_texture_float_linear")):(o=i.getExtension("OES_texture_half_float"),a=i.getExtension("OES_texture_half_float_linear")),i.clearColor(0,0,0,1);let n=t?i.HALF_FLOAT:o.HALF_FLOAT_OES,u,l,m;return t?(u=getSupportedFormat(i,i.RGBA16F,i.RGBA,n),l=getSupportedFormat(i,i.RG16F,i.RG,n),m=getSupportedFormat(i,i.R16F,i.RED,n)):(u=getSupportedFormat(i,i.RGBA,i.RGBA,n),l=getSupportedFormat(i,i.RGBA,i.RGBA,n),m=getSupportedFormat(i,i.RGBA,i.RGBA,n)),null==u?ga("send","event",t?"webgl2":"webgl","not supported"):ga("send","event",t?"webgl2":"webgl","supported"),{gl:i,ext:{formatRGBA:u,formatRG:l,formatR:m,halfFloatTexType:n,supportLinearFiltering:a}}}function getSupportedFormat(e,r,i,t){if(!supportRenderTextureFormat(e,r,i,t))switch(r){case e.R16F:return getSupportedFormat(e,e.RG16F,e.RG,t);case e.RG16F:return getSupportedFormat(e,e.RGBA16F,e.RGBA,t);default:return null}return{internalFormat:r,format:i}}function supportRenderTextureFormat(e,r,i,t){let o=e.createTexture();e.bindTexture(e.TEXTURE_2D,o),e.texParameteri(e.TEXTURE_2D,e.TEXTURE_MIN_FILTER,e.NEAREST),e.texParameteri(e.TEXTURE_2D,e.TEXTURE_MAG_FILTER,e.NEAREST),e.texParameteri(e.TEXTURE_2D,e.TEXTURE_WRAP_S,e.CLAMP_TO_EDGE),e.texParameteri(e.TEXTURE_2D,e.TEXTURE_WRAP_T,e.CLAMP_TO_EDGE),e.texImage2D(e.TEXTURE_2D,0,r,4,4,0,i,t,null);let a=e.createFramebuffer();e.bindFramebuffer(e.FRAMEBUFFER,a),e.framebufferTexture2D(e.FRAMEBUFFER,e.COLOR_ATTACHMENT0,e.TEXTURE_2D,o,0);let n=e.checkFramebufferStatus(e.FRAMEBUFFER);return n==e.FRAMEBUFFER_COMPLETE}function startGUI(){var e=new dat.GUI({width:300});e.add(config,"SIM_RESOLUTION",{32:32,64:64,128:128,256:256}).name("sim resolution").onFinishChange(initFramebuffers),e.add(config,"DYE_RESOLUTION",{128:128,256:256,512:512,1024:1024}).name("dye resolution").onFinishChange(initFramebuffers),e.add(config,"DENSITY_DISSIPATION",.9,1).name("density diffusion"),e.add(config,"VELOCITY_DISSIPATION",.9,1).name("velocity diffusion"),e.add(config,"PRESSURE_DISSIPATION",0,1).name("pressure diffusion"),e.add(config,"CURL",0,50).name("vorticity").step(1),e.add(config,"SPLAT_RADIUS",.01,1).name("splat radius"),e.add(config,"SHADING").name("shading"),e.add(config,"COLORFUL").name("colorful"),e.add(config,"PAUSED").name("paused").listen(),e.add({fun(){splatStack.push(parseInt(20*Math.random())+5)}},"fun").name("Random splats");let r=e.addFolder("Bloom");r.add(config,"BLOOM").name("enabled"),r.add(config,"BLOOM_INTENSITY",.1,2).name("intensity"),r.add(config,"BLOOM_THRESHOLD",0,1).name("threshold");let i=e.addFolder("Capture");i.addColor(config,"BACK_COLOR").name("background color"),i.add(config,"TRANSPARENT").name("transparent"),i.add({fun:captureScreenshot},"fun").name("take screenshot"),isMobile()&&e.close()}function captureScreenshot(){colorProgram.bind(),e.uniform4f(colorProgram.uniforms.color,0,0,0,1),blit(density.write.fbo),render(density.write.fbo),e.bindFramebuffer(e.FRAMEBUFFER,density.write.fbo);let r=dyeWidth*dyeHeight*4,i=new Float32Array(r);e.readPixels(0,0,dyeWidth,dyeHeight,e.RGBA,e.FLOAT,i);let t=new Uint8Array(r),o=0;for(let a=dyeHeight-1;a>=0;a--)for(let n=0;n<dyeWidth;n++){let u=a*dyeWidth*4+4*n;t[u+0]=255*clamp01(i[o+0]),t[u+1]=255*clamp01(i[o+1]),t[u+2]=255*clamp01(i[o+2]),t[u+3]=255*clamp01(i[o+3]),o+=4}let l=document.createElement("canvas"),m=l.getContext("2d");l.width=dyeWidth,l.height=dyeHeight;let c=m.createImageData(dyeWidth,dyeHeight);c.data.set(t),m.putImageData(c,0,0);let s=l.toDataURL();downloadURI("fluid.png",s),URL.revokeObjectURL(s)}function clamp01(e){return Math.min(Math.max(e,0),1)}function isMobile(){return/Mobi|Android/i.test(navigator.userAgent)}isMobile()&&(config.SHADING=!1),r.supportLinearFiltering||(config.SHADING=!1,config.BLOOM=!1);class GLProgram{constructor(r,i){if(this.uniforms={},this.program=e.createProgram(),e.attachShader(this.program,r),e.attachShader(this.program,i),e.linkProgram(this.program),!e.getProgramParameter(this.program,e.LINK_STATUS))throw e.getProgramInfoLog(this.program);let t=e.getProgramParameter(this.program,e.ACTIVE_UNIFORMS);for(let o=0;o<t;o++){let a=e.getActiveUniform(this.program,o).name;this.uniforms[a]=e.getUniformLocation(this.program,a)}}bind(){e.useProgram(this.program)}}function compileShader(r,i){let t=e.createShader(r);if(e.shaderSource(t,i),e.compileShader(t),!e.getShaderParameter(t,e.COMPILE_STATUS))throw e.getShaderInfoLog(t);return t}const baseVertexShader=compileShader(e.VERTEX_SHADER,`
     precision highp float;
 
     attribute vec2 aPosition;
@@ -339,12 +17,7 @@ const baseVertexShader = compileShader(
         vB = vUv - vec2(0.0, texelSize.y);
         gl_Position = vec4(aPosition, 0.0, 1.0);
     }
-`
-);
-
-const clearShader = compileShader(
-  gl.FRAGMENT_SHADER,
-  `
+`),clearShader=compileShader(e.FRAGMENT_SHADER,`
     precision mediump float;
     precision mediump sampler2D;
 
@@ -355,12 +28,7 @@ const clearShader = compileShader(
     void main () {
         gl_FragColor = value * texture2D(uTexture, vUv);
     }
-`
-);
-
-const colorShader = compileShader(
-  gl.FRAGMENT_SHADER,
-  `
+`),colorShader=compileShader(e.FRAGMENT_SHADER,`
     precision mediump float;
 
     uniform vec4 color;
@@ -368,12 +36,7 @@ const colorShader = compileShader(
     void main () {
         gl_FragColor = color;
     }
-`
-);
-
-const backgroundShader = compileShader(
-  gl.FRAGMENT_SHADER,
-  `
+`),backgroundShader=compileShader(e.FRAGMENT_SHADER,`
     precision highp float;
     precision highp sampler2D;
 
@@ -389,12 +52,7 @@ const backgroundShader = compileShader(
         v = v * 0.1 + 0.8;
         gl_FragColor = vec4(vec3(v), 1.0);
     }
-`
-);
-
-const displayShader = compileShader(
-  gl.FRAGMENT_SHADER,
-  `
+`),displayShader=compileShader(e.FRAGMENT_SHADER,`
     precision highp float;
     precision highp sampler2D;
 
@@ -406,12 +64,7 @@ const displayShader = compileShader(
         float a = max(C.r, max(C.g, C.b));
         gl_FragColor = vec4(C, a);
     }
-`
-);
-
-const displayBloomShader = compileShader(
-  gl.FRAGMENT_SHADER,
-  `
+`),displayBloomShader=compileShader(e.FRAGMENT_SHADER,`
     precision highp float;
     precision highp sampler2D;
 
@@ -432,12 +85,7 @@ const displayBloomShader = compileShader(
         float a = max(C.r, max(C.g, C.b));
         gl_FragColor = vec4(C, a);
     }
-`
-);
-
-const displayShadingShader = compileShader(
-  gl.FRAGMENT_SHADER,
-  `
+`),displayShadingShader=compileShader(e.FRAGMENT_SHADER,`
     precision highp float;
     precision highp sampler2D;
 
@@ -468,12 +116,7 @@ const displayShadingShader = compileShader(
         float a = max(C.r, max(C.g, C.b));
         gl_FragColor = vec4(C, a);
     }
-`
-);
-
-const displayBloomShadingShader = compileShader(
-  gl.FRAGMENT_SHADER,
-  `
+`),displayBloomShadingShader=compileShader(e.FRAGMENT_SHADER,`
     precision highp float;
     precision highp sampler2D;
 
@@ -514,12 +157,7 @@ const displayBloomShadingShader = compileShader(
         float a = max(C.r, max(C.g, C.b));
         gl_FragColor = vec4(C, a);
     }
-`
-);
-
-const bloomPrefilterShader = compileShader(
-  gl.FRAGMENT_SHADER,
-  `
+`),bloomPrefilterShader=compileShader(e.FRAGMENT_SHADER,`
     precision mediump float;
     precision mediump sampler2D;
 
@@ -536,12 +174,7 @@ const bloomPrefilterShader = compileShader(
         c *= max(rq, br - threshold) / max(br, 0.0001);
         gl_FragColor = vec4(c, 0.0);
     }
-`
-);
-
-const bloomBlurShader = compileShader(
-  gl.FRAGMENT_SHADER,
-  `
+`),bloomBlurShader=compileShader(e.FRAGMENT_SHADER,`
     precision mediump float;
     precision mediump sampler2D;
 
@@ -560,12 +193,7 @@ const bloomBlurShader = compileShader(
         sum *= 0.25;
         gl_FragColor = sum;
     }
-`
-);
-
-const bloomFinalShader = compileShader(
-  gl.FRAGMENT_SHADER,
-  `
+`),bloomFinalShader=compileShader(e.FRAGMENT_SHADER,`
     precision mediump float;
     precision mediump sampler2D;
 
@@ -585,12 +213,7 @@ const bloomFinalShader = compileShader(
         sum *= 0.25;
         gl_FragColor = sum * intensity;
     }
-`
-);
-
-const splatShader = compileShader(
-  gl.FRAGMENT_SHADER,
-  `
+`),splatShader=compileShader(e.FRAGMENT_SHADER,`
     precision highp float;
     precision highp sampler2D;
 
@@ -608,12 +231,7 @@ const splatShader = compileShader(
         vec3 base = texture2D(uTarget, vUv).xyz;
         gl_FragColor = vec4(base + splat, 1.0);
     }
-`
-);
-
-const advectionManualFilteringShader = compileShader(
-  gl.FRAGMENT_SHADER,
-  `
+`),advectionManualFilteringShader=compileShader(e.FRAGMENT_SHADER,`
     precision highp float;
     precision highp sampler2D;
 
@@ -644,12 +262,7 @@ const advectionManualFilteringShader = compileShader(
         gl_FragColor = dissipation * bilerp(uSource, coord, dyeTexelSize);
         gl_FragColor.a = 1.0;
     }
-`
-);
-
-const advectionShader = compileShader(
-  gl.FRAGMENT_SHADER,
-  `
+`),advectionShader=compileShader(e.FRAGMENT_SHADER,`
     precision highp float;
     precision highp sampler2D;
 
@@ -665,12 +278,7 @@ const advectionShader = compileShader(
         gl_FragColor = dissipation * texture2D(uSource, coord);
         gl_FragColor.a = 1.0;
     }
-`
-);
-
-const divergenceShader = compileShader(
-  gl.FRAGMENT_SHADER,
-  `
+`),divergenceShader=compileShader(e.FRAGMENT_SHADER,`
     precision mediump float;
     precision mediump sampler2D;
 
@@ -696,12 +304,7 @@ const divergenceShader = compileShader(
         float div = 0.5 * (R - L + T - B);
         gl_FragColor = vec4(div, 0.0, 0.0, 1.0);
     }
-`
-);
-
-const curlShader = compileShader(
-  gl.FRAGMENT_SHADER,
-  `
+`),curlShader=compileShader(e.FRAGMENT_SHADER,`
     precision mediump float;
     precision mediump sampler2D;
 
@@ -720,12 +323,7 @@ const curlShader = compileShader(
         float vorticity = R - L - T + B;
         gl_FragColor = vec4(0.5 * vorticity, 0.0, 0.0, 1.0);
     }
-`
-);
-
-const vorticityShader = compileShader(
-  gl.FRAGMENT_SHADER,
-  `
+`),vorticityShader=compileShader(e.FRAGMENT_SHADER,`
     precision highp float;
     precision highp sampler2D;
 
@@ -754,12 +352,7 @@ const vorticityShader = compileShader(
         vec2 vel = texture2D(uVelocity, vUv).xy;
         gl_FragColor = vec4(vel + force * dt, 0.0, 1.0);
     }
-`
-);
-
-const pressureShader = compileShader(
-  gl.FRAGMENT_SHADER,
-  `
+`),pressureShader=compileShader(e.FRAGMENT_SHADER,`
     precision mediump float;
     precision mediump sampler2D;
 
@@ -788,12 +381,7 @@ const pressureShader = compileShader(
         float pressure = (L + R + B + T - divergence) * 0.25;
         gl_FragColor = vec4(pressure, 0.0, 0.0, 1.0);
     }
-`
-);
-
-const gradientSubtractShader = compileShader(
-  gl.FRAGMENT_SHADER,
-  `
+`),gradientSubtractShader=compileShader(e.FRAGMENT_SHADER,`
     precision mediump float;
     precision mediump sampler2D;
 
@@ -820,719 +408,4 @@ const gradientSubtractShader = compileShader(
         velocity.xy -= vec2(R - L, T - B);
         gl_FragColor = vec4(velocity, 0.0, 1.0);
     }
-`
-);
-
-const blit = (() => {
-  gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
-  gl.bufferData(
-    gl.ARRAY_BUFFER,
-    new Float32Array([-1, -1, -1, 1, 1, 1, 1, -1]),
-    gl.STATIC_DRAW
-  );
-  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, gl.createBuffer());
-  gl.bufferData(
-    gl.ELEMENT_ARRAY_BUFFER,
-    new Uint16Array([0, 1, 2, 0, 2, 3]),
-    gl.STATIC_DRAW
-  );
-  gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
-  gl.enableVertexAttribArray(0);
-
-  return (destination) => {
-    gl.bindFramebuffer(gl.FRAMEBUFFER, destination);
-    gl.drawElements(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0);
-  };
-})();
-
-let simWidth;
-let simHeight;
-let dyeWidth;
-let dyeHeight;
-let density;
-let velocity;
-let divergence;
-let curl;
-let pressure;
-let bloom;
-
-// let ditheringTexture = createTextureAsync("LDR_RGB1_0.png");
-
-const clearProgram = new GLProgram(baseVertexShader, clearShader);
-const colorProgram = new GLProgram(baseVertexShader, colorShader);
-const backgroundProgram = new GLProgram(baseVertexShader, backgroundShader);
-const displayProgram = new GLProgram(baseVertexShader, displayShader);
-const displayBloomProgram = new GLProgram(baseVertexShader, displayBloomShader);
-const displayShadingProgram = new GLProgram(
-  baseVertexShader,
-  displayShadingShader
-);
-const displayBloomShadingProgram = new GLProgram(
-  baseVertexShader,
-  displayBloomShadingShader
-);
-const bloomPrefilterProgram = new GLProgram(
-  baseVertexShader,
-  bloomPrefilterShader
-);
-const bloomBlurProgram = new GLProgram(baseVertexShader, bloomBlurShader);
-const bloomFinalProgram = new GLProgram(baseVertexShader, bloomFinalShader);
-const splatProgram = new GLProgram(baseVertexShader, splatShader);
-const advectionProgram = new GLProgram(
-  baseVertexShader,
-  ext.supportLinearFiltering ? advectionShader : advectionManualFilteringShader
-);
-const divergenceProgram = new GLProgram(baseVertexShader, divergenceShader);
-const curlProgram = new GLProgram(baseVertexShader, curlShader);
-const vorticityProgram = new GLProgram(baseVertexShader, vorticityShader);
-const pressureProgram = new GLProgram(baseVertexShader, pressureShader);
-const gradienSubtractProgram = new GLProgram(
-  baseVertexShader,
-  gradientSubtractShader
-);
-
-function initFramebuffers() {
-  let simRes = getResolution(config.SIM_RESOLUTION);
-  let dyeRes = getResolution(config.DYE_RESOLUTION);
-
-  simWidth = simRes.width;
-  simHeight = simRes.height;
-  dyeWidth = dyeRes.width;
-  dyeHeight = dyeRes.height;
-
-  const texType = ext.halfFloatTexType;
-  const rgba = ext.formatRGBA;
-  const rg = ext.formatRG;
-  const r = ext.formatR;
-  const filtering = ext.supportLinearFiltering ? gl.LINEAR : gl.NEAREST;
-
-  if (density == null)
-    density = createDoubleFBO(
-      dyeWidth,
-      dyeHeight,
-      rgba.internalFormat,
-      rgba.format,
-      texType,
-      filtering
-    );
-  else
-    density = resizeDoubleFBO(
-      density,
-      dyeWidth,
-      dyeHeight,
-      rgba.internalFormat,
-      rgba.format,
-      texType,
-      filtering
-    );
-
-  if (velocity == null)
-    velocity = createDoubleFBO(
-      simWidth,
-      simHeight,
-      rg.internalFormat,
-      rg.format,
-      texType,
-      filtering
-    );
-  else
-    velocity = resizeDoubleFBO(
-      velocity,
-      simWidth,
-      simHeight,
-      rg.internalFormat,
-      rg.format,
-      texType,
-      filtering
-    );
-
-  divergence = createFBO(
-    simWidth,
-    simHeight,
-    r.internalFormat,
-    r.format,
-    texType,
-    gl.NEAREST
-  );
-  curl = createFBO(
-    simWidth,
-    simHeight,
-    r.internalFormat,
-    r.format,
-    texType,
-    gl.NEAREST
-  );
-  pressure = createDoubleFBO(
-    simWidth,
-    simHeight,
-    r.internalFormat,
-    r.format,
-    texType,
-    gl.NEAREST
-  );
-
-  initBloomFramebuffers();
-}
-
-function initBloomFramebuffers() {
-  let res = getResolution(config.BLOOM_RESOLUTION);
-
-  const texType = ext.halfFloatTexType;
-  const rgba = ext.formatRGBA;
-  const filtering = ext.supportLinearFiltering ? gl.LINEAR : gl.NEAREST;
-
-  bloom = createFBO(
-    res.width,
-    res.height,
-    rgba.internalFormat,
-    rgba.format,
-    texType,
-    filtering
-  );
-
-  bloomFramebuffers.length = 0;
-  for (let i = 0; i < config.BLOOM_ITERATIONS; i++) {
-    let width = res.width >> (i + 1);
-    let height = res.height >> (i + 1);
-
-    if (width < 2 || height < 2) break;
-
-    let fbo = createFBO(
-      width,
-      height,
-      rgba.internalFormat,
-      rgba.format,
-      texType,
-      filtering
-    );
-    bloomFramebuffers.push(fbo);
-  }
-}
-
-function createFBO(w, h, internalFormat, format, type, param) {
-  gl.activeTexture(gl.TEXTURE0);
-  let texture = gl.createTexture();
-  gl.bindTexture(gl.TEXTURE_2D, texture);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, param);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, param);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-  gl.texImage2D(gl.TEXTURE_2D, 0, internalFormat, w, h, 0, format, type, null);
-
-  let fbo = gl.createFramebuffer();
-  gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
-  gl.framebufferTexture2D(
-    gl.FRAMEBUFFER,
-    gl.COLOR_ATTACHMENT0,
-    gl.TEXTURE_2D,
-    texture,
-    0
-  );
-  gl.viewport(0, 0, w, h);
-  gl.clear(gl.COLOR_BUFFER_BIT);
-
-  return {
-    texture,
-    fbo,
-    width: w,
-    height: h,
-    attach(id) {
-      gl.activeTexture(gl.TEXTURE0 + id);
-      gl.bindTexture(gl.TEXTURE_2D, texture);
-      return id;
-    }
-  };
-}
-
-function createDoubleFBO(w, h, internalFormat, format, type, param) {
-  let fbo1 = createFBO(w, h, internalFormat, format, type, param);
-  let fbo2 = createFBO(w, h, internalFormat, format, type, param);
-
-  return {
-    get read() {
-      return fbo1;
-    },
-    set read(value) {
-      fbo1 = value;
-    },
-    get write() {
-      return fbo2;
-    },
-    set write(value) {
-      fbo2 = value;
-    },
-    swap() {
-      let temp = fbo1;
-      fbo1 = fbo2;
-      fbo2 = temp;
-    }
-  };
-}
-
-function resizeFBO(target, w, h, internalFormat, format, type, param) {
-  let newFBO = createFBO(w, h, internalFormat, format, type, param);
-  clearProgram.bind();
-  gl.uniform1i(clearProgram.uniforms.uTexture, target.attach(0));
-  gl.uniform1f(clearProgram.uniforms.value, 1);
-  blit(newFBO.fbo);
-  return newFBO;
-}
-
-function resizeDoubleFBO(target, w, h, internalFormat, format, type, param) {
-  target.read = resizeFBO(
-    target.read,
-    w,
-    h,
-    internalFormat,
-    format,
-    type,
-    param
-  );
-  target.write = createFBO(w, h, internalFormat, format, type, param);
-  return target;
-}
-
-function createTextureAsync(url) {
-  let texture = gl.createTexture();
-  gl.bindTexture(gl.TEXTURE_2D, texture);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
-  gl.texImage2D(
-    gl.TEXTURE_2D,
-    0,
-    gl.RGB,
-    1,
-    1,
-    0,
-    gl.RGB,
-    gl.UNSIGNED_BYTE,
-    new Uint8Array([255, 255, 255])
-  );
-
-  let obj = {
-    texture,
-    width: 1,
-    height: 1,
-    attach(id) {
-      gl.activeTexture(gl.TEXTURE0 + id);
-      gl.bindTexture(gl.TEXTURE_2D, texture);
-      return id;
-    }
-  };
-
-  let image = new Image();
-  image.onload = () => {
-    obj.width = image.width;
-    obj.height = image.height;
-    gl.bindTexture(gl.TEXTURE_2D, texture);
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, image);
-  };
-  image.src = url;
-
-  return obj;
-}
-
-initFramebuffers();
-multipleSplats(parseInt(Math.random() * 20) + 5);
-
-let lastColorChangeTime = Date.now();
-
-update();
-
-function update() {
-  resizeCanvas();
-  input();
-  if (!config.PAUSED) step(0.016);
-  render(null);
-  requestAnimationFrame(update);
-}
-
-function input() {
-  if (splatStack.length > 0) multipleSplats(splatStack.pop());
-
-  for (let i = 0; i < pointers.length; i++) {
-    const p = pointers[i];
-    if (p.moved) {
-      splat(p.x, p.y, p.dx, p.dy, p.color);
-      p.moved = false;
-    }
-  }
-
-  if (!config.COLORFUL) return;
-
-  if (lastColorChangeTime + 100 < Date.now()) {
-    lastColorChangeTime = Date.now();
-    for (let i = 0; i < pointers.length; i++) {
-      const p = pointers[i];
-      p.color = generateColor();
-    }
-  }
-}
-
-function step(dt) {
-  gl.disable(gl.BLEND);
-  gl.viewport(0, 0, simWidth, simHeight);
-
-  curlProgram.bind();
-  gl.uniform2f(curlProgram.uniforms.texelSize, 1.0 / simWidth, 1.0 / simHeight);
-  gl.uniform1i(curlProgram.uniforms.uVelocity, velocity.read.attach(0));
-  blit(curl.fbo);
-
-  vorticityProgram.bind();
-  gl.uniform2f(
-    vorticityProgram.uniforms.texelSize,
-    1.0 / simWidth,
-    1.0 / simHeight
-  );
-  gl.uniform1i(vorticityProgram.uniforms.uVelocity, velocity.read.attach(0));
-  gl.uniform1i(vorticityProgram.uniforms.uCurl, curl.attach(1));
-  gl.uniform1f(vorticityProgram.uniforms.curl, config.CURL);
-  gl.uniform1f(vorticityProgram.uniforms.dt, dt);
-  blit(velocity.write.fbo);
-  velocity.swap();
-
-  divergenceProgram.bind();
-  gl.uniform2f(
-    divergenceProgram.uniforms.texelSize,
-    1.0 / simWidth,
-    1.0 / simHeight
-  );
-  gl.uniform1i(divergenceProgram.uniforms.uVelocity, velocity.read.attach(0));
-  blit(divergence.fbo);
-
-  clearProgram.bind();
-  gl.uniform1i(clearProgram.uniforms.uTexture, pressure.read.attach(0));
-  gl.uniform1f(clearProgram.uniforms.value, config.PRESSURE_DISSIPATION);
-  blit(pressure.write.fbo);
-  pressure.swap();
-
-  pressureProgram.bind();
-  gl.uniform2f(
-    pressureProgram.uniforms.texelSize,
-    1.0 / simWidth,
-    1.0 / simHeight
-  );
-  gl.uniform1i(pressureProgram.uniforms.uDivergence, divergence.attach(0));
-  for (let i = 0; i < config.PRESSURE_ITERATIONS; i++) {
-    gl.uniform1i(pressureProgram.uniforms.uPressure, pressure.read.attach(1));
-    blit(pressure.write.fbo);
-    pressure.swap();
-  }
-
-  gradienSubtractProgram.bind();
-  gl.uniform2f(
-    gradienSubtractProgram.uniforms.texelSize,
-    1.0 / simWidth,
-    1.0 / simHeight
-  );
-  gl.uniform1i(
-    gradienSubtractProgram.uniforms.uPressure,
-    pressure.read.attach(0)
-  );
-  gl.uniform1i(
-    gradienSubtractProgram.uniforms.uVelocity,
-    velocity.read.attach(1)
-  );
-  blit(velocity.write.fbo);
-  velocity.swap();
-
-  advectionProgram.bind();
-  gl.uniform2f(
-    advectionProgram.uniforms.texelSize,
-    1.0 / simWidth,
-    1.0 / simHeight
-  );
-  if (!ext.supportLinearFiltering)
-    gl.uniform2f(
-      advectionProgram.uniforms.dyeTexelSize,
-      1.0 / simWidth,
-      1.0 / simHeight
-    );
-  let velocityId = velocity.read.attach(0);
-  gl.uniform1i(advectionProgram.uniforms.uVelocity, velocityId);
-  gl.uniform1i(advectionProgram.uniforms.uSource, velocityId);
-  gl.uniform1f(advectionProgram.uniforms.dt, dt);
-  gl.uniform1f(
-    advectionProgram.uniforms.dissipation,
-    config.VELOCITY_DISSIPATION
-  );
-  blit(velocity.write.fbo);
-  velocity.swap();
-
-  gl.viewport(0, 0, dyeWidth, dyeHeight);
-
-  if (!ext.supportLinearFiltering)
-    gl.uniform2f(
-      advectionProgram.uniforms.dyeTexelSize,
-      1.0 / dyeWidth,
-      1.0 / dyeHeight
-    );
-  gl.uniform1i(advectionProgram.uniforms.uVelocity, velocity.read.attach(0));
-  gl.uniform1i(advectionProgram.uniforms.uSource, density.read.attach(1));
-  gl.uniform1f(
-    advectionProgram.uniforms.dissipation,
-    config.DENSITY_DISSIPATION
-  );
-  blit(density.write.fbo);
-  density.swap();
-}
-
-function render(target) {
-  if (config.BLOOM) applyBloom(density.read, bloom);
-
-  if (target == null || !config.TRANSPARENT) {
-    gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
-    gl.enable(gl.BLEND);
-  } else {
-    gl.disable(gl.BLEND);
-  }
-
-  let width = target == null ? gl.drawingBufferWidth : dyeWidth;
-  let height = target == null ? gl.drawingBufferHeight : dyeHeight;
-
-  gl.viewport(0, 0, width, height);
-
-  if (!config.TRANSPARENT) {
-    colorProgram.bind();
-    let bc = config.BACK_COLOR;
-    gl.uniform4f(
-      colorProgram.uniforms.color,
-      bc.r / 255,
-      bc.g / 255,
-      bc.b / 255,
-      1
-    );
-    blit(target);
-  }
-
-  if (target == null && config.TRANSPARENT) {
-    backgroundProgram.bind();
-    gl.uniform1f(
-      backgroundProgram.uniforms.aspectRatio,
-      canvas.width / canvas.height
-    );
-    blit(null);
-  }
-
-  if (config.SHADING) {
-    let program = config.BLOOM
-      ? displayBloomShadingProgram
-      : displayShadingProgram;
-    program.bind();
-    gl.uniform2f(program.uniforms.texelSize, 1.0 / width, 1.0 / height);
-    gl.uniform1i(program.uniforms.uTexture, density.read.attach(0));
-    if (config.BLOOM) {
-      gl.uniform1i(program.uniforms.uBloom, bloom.attach(1));
-    //   gl.uniform1i(program.uniforms.uDithering, ditheringTexture.attach(2));
-    //   let scale = getTextureScale(ditheringTexture, width, height);
-      gl.uniform2f(program.uniforms.ditherScale, scale.x, scale.y);
-    }
-  } else {
-    let program = config.BLOOM ? displayBloomProgram : displayProgram;
-    program.bind();
-    gl.uniform1i(program.uniforms.uTexture, density.read.attach(0));
-    if (config.BLOOM) {
-      gl.uniform1i(program.uniforms.uBloom, bloom.attach(1));
-    //   gl.uniform1i(program.uniforms.uDithering, ditheringTexture.attach(2));
-    //   let scale = getTextureScale(ditheringTexture, width, height);
-      gl.uniform2f(program.uniforms.ditherScale, scale.x, scale.y);
-    }
-  }
-
-  blit(target);
-}
-
-function applyBloom(source, destination) {
-  if (bloomFramebuffers.length < 2) return;
-
-  let last = destination;
-
-  gl.disable(gl.BLEND);
-  bloomPrefilterProgram.bind();
-  let knee = config.BLOOM_THRESHOLD * config.BLOOM_SOFT_KNEE + 0.0001;
-  let curve0 = config.BLOOM_THRESHOLD - knee;
-  let curve1 = knee * 2;
-  let curve2 = 0.25 / knee;
-  gl.uniform3f(bloomPrefilterProgram.uniforms.curve, curve0, curve1, curve2);
-  gl.uniform1f(
-    bloomPrefilterProgram.uniforms.threshold,
-    config.BLOOM_THRESHOLD
-  );
-  gl.uniform1i(bloomPrefilterProgram.uniforms.uTexture, source.attach(0));
-  gl.viewport(0, 0, last.width, last.height);
-  blit(last.fbo);
-
-  bloomBlurProgram.bind();
-  for (let i = 0; i < bloomFramebuffers.length; i++) {
-    let dest = bloomFramebuffers[i];
-    gl.uniform2f(
-      bloomBlurProgram.uniforms.texelSize,
-      1.0 / last.width,
-      1.0 / last.height
-    );
-    gl.uniform1i(bloomBlurProgram.uniforms.uTexture, last.attach(0));
-    gl.viewport(0, 0, dest.width, dest.height);
-    blit(dest.fbo);
-    last = dest;
-  }
-
-  gl.blendFunc(gl.ONE, gl.ONE);
-  gl.enable(gl.BLEND);
-
-  for (let i = bloomFramebuffers.length - 2; i >= 0; i--) {
-    let baseTex = bloomFramebuffers[i];
-    gl.uniform2f(
-      bloomBlurProgram.uniforms.texelSize,
-      1.0 / last.width,
-      1.0 / last.height
-    );
-    gl.uniform1i(bloomBlurProgram.uniforms.uTexture, last.attach(0));
-    gl.viewport(0, 0, baseTex.width, baseTex.height);
-    blit(baseTex.fbo);
-    last = baseTex;
-  }
-
-  gl.disable(gl.BLEND);
-  bloomFinalProgram.bind();
-  gl.uniform2f(
-    bloomFinalProgram.uniforms.texelSize,
-    1.0 / last.width,
-    1.0 / last.height
-  );
-  gl.uniform1i(bloomFinalProgram.uniforms.uTexture, last.attach(0));
-  gl.uniform1f(bloomFinalProgram.uniforms.intensity, config.BLOOM_INTENSITY);
-  gl.viewport(0, 0, destination.width, destination.height);
-  blit(destination.fbo);
-}
-
-function splat(x, y, dx, dy, color) {
-  gl.viewport(0, 0, simWidth, simHeight);
-  splatProgram.bind();
-  gl.uniform1i(splatProgram.uniforms.uTarget, velocity.read.attach(0));
-  gl.uniform1f(splatProgram.uniforms.aspectRatio, canvas.width / canvas.height);
-  gl.uniform2f(
-    splatProgram.uniforms.point,
-    x / canvas.width,
-    1.0 - y / canvas.height
-  );
-  gl.uniform3f(splatProgram.uniforms.color, dx, -dy, 1.0);
-  gl.uniform1f(splatProgram.uniforms.radius, config.SPLAT_RADIUS / 100.0);
-  blit(velocity.write.fbo);
-  velocity.swap();
-
-  gl.viewport(0, 0, dyeWidth, dyeHeight);
-  gl.uniform1i(splatProgram.uniforms.uTarget, density.read.attach(0));
-  gl.uniform3f(splatProgram.uniforms.color, color.r, color.g, color.b);
-  blit(density.write.fbo);
-  density.swap();
-}
-
-function multipleSplats(amount) {
-  for (let i = 0; i < amount; i++) {
-    const color = generateColor();
-    color.r *= 10.0;
-    color.g *= 10.0;
-    color.b *= 10.0;
-    const x = canvas.width * Math.random();
-    const y = canvas.height * Math.random();
-    const dx = 1000 * (Math.random() - 0.5);
-    const dy = 1000 * (Math.random() - 0.5);
-    splat(x, y, dx, dy, color);
-  }
-}
-
-function resizeCanvas() {
-  if (
-    canvas.width != canvas.clientWidth ||
-    canvas.height != canvas.clientHeight
-  ) {
-    canvas.width = canvas.clientWidth;
-    canvas.height = canvas.clientHeight;
-    initFramebuffers();
-  }
-}
-
-document.body.addEventListener("mousemove", (e) => {
-  pointers[0].moved = pointers[0].down;
-  pointers[0].dx = (e.clientX - pointers[0].x) * 5.0;
-  pointers[0].dy = (e.clientY - pointers[0].y) * 5.0;
-  pointers[0].x = e.clientX;
-  pointers[0].y = e.clientY;
-});
-
-document.body.addEventListener("mousemove", () => {
-  pointers[0].down = true;
-  pointers[0].color = generateColor();
-});
-
-
-
-function generateColor() {
-  // Return light gray color (#ccc)
-  return { r: 204/255, g: 204/255, b: 204/255 };
-}
-
-function HSVtoRGB(h, s, v) {
-  let r, g, b, i, f, p, q, t;
-  i = Math.floor(h * 6);
-  f = h * 6 - i;
-  p = v * (1 - s);
-  q = v * (1 - f * s);
-  t = v * (1 - (1 - f) * s);
-
-  switch (i % 6) {
-    case 0:
-      (r = v), (g = t), (b = p);
-      break;
-    case 1:
-      (r = q), (g = v), (b = p);
-      break;
-    case 2:
-      (r = p), (g = v), (b = t);
-      break;
-    case 3:
-      (r = p), (g = q), (b = v);
-      break;
-    case 4:
-      (r = t), (g = p), (b = v);
-      break;
-    case 5:
-      (r = v), (g = p), (b = q);
-      break;
-  }
-
-  return {
-    r,
-    g,
-    b
-  };
-}
-
-function getResolution(resolution) {
-  let aspectRatio = gl.drawingBufferWidth / gl.drawingBufferHeight;
-  if (aspectRatio < 1) aspectRatio = 1.0 / aspectRatio;
-
-  let max = Math.round(resolution * aspectRatio);
-  let min = Math.round(resolution);
-
-  if (gl.drawingBufferWidth > gl.drawingBufferHeight)
-    return {
-      width: max,
-      height: min
-    };
-  else
-    return {
-      width: min,
-      height: max
-    };
-}
-
-function getTextureScale(texture, width, height) {
-  return {
-    x: width / texture.width,
-    y: height / texture.height
-  };
-}
-
+`),blit=(e.bindBuffer(e.ARRAY_BUFFER,e.createBuffer()),e.bufferData(e.ARRAY_BUFFER,new Float32Array([-1,-1,-1,1,1,1,1,-1]),e.STATIC_DRAW),e.bindBuffer(e.ELEMENT_ARRAY_BUFFER,e.createBuffer()),e.bufferData(e.ELEMENT_ARRAY_BUFFER,new Uint16Array([0,1,2,0,2,3]),e.STATIC_DRAW),e.vertexAttribPointer(0,2,e.FLOAT,!1,0,0),e.enableVertexAttribArray(0),r=>{e.bindFramebuffer(e.FRAMEBUFFER,r),e.drawElements(e.TRIANGLES,6,e.UNSIGNED_SHORT,0)});let simWidth,simHeight,dyeWidth,dyeHeight,density,velocity,divergence,curl,pressure,bloom;const clearProgram=new GLProgram(baseVertexShader,clearShader),colorProgram=new GLProgram(baseVertexShader,colorShader),backgroundProgram=new GLProgram(baseVertexShader,backgroundShader),displayProgram=new GLProgram(baseVertexShader,displayShader),displayBloomProgram=new GLProgram(baseVertexShader,displayBloomShader),displayShadingProgram=new GLProgram(baseVertexShader,displayShadingShader),displayBloomShadingProgram=new GLProgram(baseVertexShader,displayBloomShadingShader),bloomPrefilterProgram=new GLProgram(baseVertexShader,bloomPrefilterShader),bloomBlurProgram=new GLProgram(baseVertexShader,bloomBlurShader),bloomFinalProgram=new GLProgram(baseVertexShader,bloomFinalShader),splatProgram=new GLProgram(baseVertexShader,splatShader),advectionProgram=new GLProgram(baseVertexShader,r.supportLinearFiltering?advectionShader:advectionManualFilteringShader),divergenceProgram=new GLProgram(baseVertexShader,divergenceShader),curlProgram=new GLProgram(baseVertexShader,curlShader),vorticityProgram=new GLProgram(baseVertexShader,vorticityShader),pressureProgram=new GLProgram(baseVertexShader,pressureShader),gradienSubtractProgram=new GLProgram(baseVertexShader,gradientSubtractShader);function initFramebuffers(){let i=getResolution(config.SIM_RESOLUTION),t=getResolution(config.DYE_RESOLUTION);simWidth=i.width,simHeight=i.height,dyeWidth=t.width,dyeHeight=t.height;let o=r.halfFloatTexType,a=r.formatRGBA,n=r.formatRG,u=r.formatR,l=r.supportLinearFiltering?e.LINEAR:e.NEAREST;density=null==density?createDoubleFBO(dyeWidth,dyeHeight,a.internalFormat,a.format,o,l):resizeDoubleFBO(density,dyeWidth,dyeHeight,a.internalFormat,a.format,o,l),velocity=null==velocity?createDoubleFBO(simWidth,simHeight,n.internalFormat,n.format,o,l):resizeDoubleFBO(velocity,simWidth,simHeight,n.internalFormat,n.format,o,l),divergence=createFBO(simWidth,simHeight,u.internalFormat,u.format,o,e.NEAREST),curl=createFBO(simWidth,simHeight,u.internalFormat,u.format,o,e.NEAREST),pressure=createDoubleFBO(simWidth,simHeight,u.internalFormat,u.format,o,e.NEAREST),initBloomFramebuffers()}function initBloomFramebuffers(){let i=getResolution(config.BLOOM_RESOLUTION),t=r.halfFloatTexType,o=r.formatRGBA,a=r.supportLinearFiltering?e.LINEAR:e.NEAREST;bloom=createFBO(i.width,i.height,o.internalFormat,o.format,t,a),bloomFramebuffers.length=0;for(let n=0;n<config.BLOOM_ITERATIONS;n++){let u=i.width>>n+1,l=i.height>>n+1;if(u<2||l<2)break;let m=createFBO(u,l,o.internalFormat,o.format,t,a);bloomFramebuffers.push(m)}}function createFBO(r,i,t,o,a,n){e.activeTexture(e.TEXTURE0);let u=e.createTexture();e.bindTexture(e.TEXTURE_2D,u),e.texParameteri(e.TEXTURE_2D,e.TEXTURE_MIN_FILTER,n),e.texParameteri(e.TEXTURE_2D,e.TEXTURE_MAG_FILTER,n),e.texParameteri(e.TEXTURE_2D,e.TEXTURE_WRAP_S,e.CLAMP_TO_EDGE),e.texParameteri(e.TEXTURE_2D,e.TEXTURE_WRAP_T,e.CLAMP_TO_EDGE),e.texImage2D(e.TEXTURE_2D,0,t,r,i,0,o,a,null);let l=e.createFramebuffer();return e.bindFramebuffer(e.FRAMEBUFFER,l),e.framebufferTexture2D(e.FRAMEBUFFER,e.COLOR_ATTACHMENT0,e.TEXTURE_2D,u,0),e.viewport(0,0,r,i),e.clear(e.COLOR_BUFFER_BIT),{texture:u,fbo:l,width:r,height:i,attach:r=>(e.activeTexture(e.TEXTURE0+r),e.bindTexture(e.TEXTURE_2D,u),r)}}function createDoubleFBO(e,r,i,t,o,a){let n=createFBO(e,r,i,t,o,a),u=createFBO(e,r,i,t,o,a);return{get read(){return n},set read(value){n=value},get write(){return u},set write(value){u=value},swap(){let e=n;n=u,u=e}}}function resizeFBO(r,i,t,o,a,n,u){let l=createFBO(i,t,o,a,n,u);return clearProgram.bind(),e.uniform1i(clearProgram.uniforms.uTexture,r.attach(0)),e.uniform1f(clearProgram.uniforms.value,1),blit(l.fbo),l}function resizeDoubleFBO(e,r,i,t,o,a,n){return e.read=resizeFBO(e.read,r,i,t,o,a,n),e.write=createFBO(r,i,t,o,a,n),e}function createTextureAsync(r){let i=e.createTexture();e.bindTexture(e.TEXTURE_2D,i),e.texParameteri(e.TEXTURE_2D,e.TEXTURE_MIN_FILTER,e.LINEAR),e.texParameteri(e.TEXTURE_2D,e.TEXTURE_MAG_FILTER,e.LINEAR),e.texParameteri(e.TEXTURE_2D,e.TEXTURE_WRAP_S,e.REPEAT),e.texParameteri(e.TEXTURE_2D,e.TEXTURE_WRAP_T,e.REPEAT),e.texImage2D(e.TEXTURE_2D,0,e.RGB,1,1,0,e.RGB,e.UNSIGNED_BYTE,new Uint8Array([255,255,255]));let t={texture:i,width:1,height:1,attach:r=>(e.activeTexture(e.TEXTURE0+r),e.bindTexture(e.TEXTURE_2D,i),r)},o=new Image;return o.onload=()=>{t.width=o.width,t.height=o.height,e.bindTexture(e.TEXTURE_2D,i),e.texImage2D(e.TEXTURE_2D,0,e.RGB,e.RGB,e.UNSIGNED_BYTE,o)},o.src=r,t}initFramebuffers(),multipleSplats(parseInt(20*Math.random())+5);let lastColorChangeTime=Date.now();function update(){resizeCanvas(),input(),config.PAUSED||step(.016),render(null),requestAnimationFrame(update)}function input(){splatStack.length>0&&multipleSplats(splatStack.pop());for(let e=0;e<pointers.length;e++){let r=pointers[e];r.moved&&(splat(r.x,r.y,r.dx,r.dy,r.color),r.moved=!1)}if(config.COLORFUL&&lastColorChangeTime+100<Date.now()){lastColorChangeTime=Date.now();for(let i=0;i<pointers.length;i++){let t=pointers[i];t.color=generateColor()}}}function step(i){e.disable(e.BLEND),e.viewport(0,0,simWidth,simHeight),curlProgram.bind(),e.uniform2f(curlProgram.uniforms.texelSize,1/simWidth,1/simHeight),e.uniform1i(curlProgram.uniforms.uVelocity,velocity.read.attach(0)),blit(curl.fbo),vorticityProgram.bind(),e.uniform2f(vorticityProgram.uniforms.texelSize,1/simWidth,1/simHeight),e.uniform1i(vorticityProgram.uniforms.uVelocity,velocity.read.attach(0)),e.uniform1i(vorticityProgram.uniforms.uCurl,curl.attach(1)),e.uniform1f(vorticityProgram.uniforms.curl,config.CURL),e.uniform1f(vorticityProgram.uniforms.dt,i),blit(velocity.write.fbo),velocity.swap(),divergenceProgram.bind(),e.uniform2f(divergenceProgram.uniforms.texelSize,1/simWidth,1/simHeight),e.uniform1i(divergenceProgram.uniforms.uVelocity,velocity.read.attach(0)),blit(divergence.fbo),clearProgram.bind(),e.uniform1i(clearProgram.uniforms.uTexture,pressure.read.attach(0)),e.uniform1f(clearProgram.uniforms.value,config.PRESSURE_DISSIPATION),blit(pressure.write.fbo),pressure.swap(),pressureProgram.bind(),e.uniform2f(pressureProgram.uniforms.texelSize,1/simWidth,1/simHeight),e.uniform1i(pressureProgram.uniforms.uDivergence,divergence.attach(0));for(let t=0;t<config.PRESSURE_ITERATIONS;t++)e.uniform1i(pressureProgram.uniforms.uPressure,pressure.read.attach(1)),blit(pressure.write.fbo),pressure.swap();gradienSubtractProgram.bind(),e.uniform2f(gradienSubtractProgram.uniforms.texelSize,1/simWidth,1/simHeight),e.uniform1i(gradienSubtractProgram.uniforms.uPressure,pressure.read.attach(0)),e.uniform1i(gradienSubtractProgram.uniforms.uVelocity,velocity.read.attach(1)),blit(velocity.write.fbo),velocity.swap(),advectionProgram.bind(),e.uniform2f(advectionProgram.uniforms.texelSize,1/simWidth,1/simHeight),r.supportLinearFiltering||e.uniform2f(advectionProgram.uniforms.dyeTexelSize,1/simWidth,1/simHeight);let o=velocity.read.attach(0);e.uniform1i(advectionProgram.uniforms.uVelocity,o),e.uniform1i(advectionProgram.uniforms.uSource,o),e.uniform1f(advectionProgram.uniforms.dt,i),e.uniform1f(advectionProgram.uniforms.dissipation,config.VELOCITY_DISSIPATION),blit(velocity.write.fbo),velocity.swap(),e.viewport(0,0,dyeWidth,dyeHeight),r.supportLinearFiltering||e.uniform2f(advectionProgram.uniforms.dyeTexelSize,1/dyeWidth,1/dyeHeight),e.uniform1i(advectionProgram.uniforms.uVelocity,velocity.read.attach(0)),e.uniform1i(advectionProgram.uniforms.uSource,density.read.attach(1)),e.uniform1f(advectionProgram.uniforms.dissipation,config.DENSITY_DISSIPATION),blit(density.write.fbo),density.swap()}function render(r){config.BLOOM&&applyBloom(density.read,bloom),null!=r&&config.TRANSPARENT?e.disable(e.BLEND):(e.blendFunc(e.ONE,e.ONE_MINUS_SRC_ALPHA),e.enable(e.BLEND));let i=null==r?e.drawingBufferWidth:dyeWidth,t=null==r?e.drawingBufferHeight:dyeHeight;if(e.viewport(0,0,i,t),!config.TRANSPARENT){colorProgram.bind();let o=config.BACK_COLOR;e.uniform4f(colorProgram.uniforms.color,o.r/255,o.g/255,o.b/255,1),blit(r)}if(null==r&&config.TRANSPARENT&&(backgroundProgram.bind(),e.uniform1f(backgroundProgram.uniforms.aspectRatio,canvas.width/canvas.height),blit(null)),config.SHADING){let a=config.BLOOM?displayBloomShadingProgram:displayShadingProgram;a.bind(),e.uniform2f(a.uniforms.texelSize,1/i,1/t),e.uniform1i(a.uniforms.uTexture,density.read.attach(0)),config.BLOOM&&(e.uniform1i(a.uniforms.uBloom,bloom.attach(1)),e.uniform2f(a.uniforms.ditherScale,scale.x,scale.y))}else{let n=config.BLOOM?displayBloomProgram:displayProgram;n.bind(),e.uniform1i(n.uniforms.uTexture,density.read.attach(0)),config.BLOOM&&(e.uniform1i(n.uniforms.uBloom,bloom.attach(1)),e.uniform2f(n.uniforms.ditherScale,scale.x,scale.y))}blit(r)}function applyBloom(r,i){if(bloomFramebuffers.length<2)return;let t=i;e.disable(e.BLEND),bloomPrefilterProgram.bind();let o=config.BLOOM_THRESHOLD*config.BLOOM_SOFT_KNEE+1e-4,a=config.BLOOM_THRESHOLD-o;e.uniform3f(bloomPrefilterProgram.uniforms.curve,a,2*o,.25/o),e.uniform1f(bloomPrefilterProgram.uniforms.threshold,config.BLOOM_THRESHOLD),e.uniform1i(bloomPrefilterProgram.uniforms.uTexture,r.attach(0)),e.viewport(0,0,t.width,t.height),blit(t.fbo),bloomBlurProgram.bind();for(let n=0;n<bloomFramebuffers.length;n++){let u=bloomFramebuffers[n];e.uniform2f(bloomBlurProgram.uniforms.texelSize,1/t.width,1/t.height),e.uniform1i(bloomBlurProgram.uniforms.uTexture,t.attach(0)),e.viewport(0,0,u.width,u.height),blit(u.fbo),t=u}e.blendFunc(e.ONE,e.ONE),e.enable(e.BLEND);for(let l=bloomFramebuffers.length-2;l>=0;l--){let m=bloomFramebuffers[l];e.uniform2f(bloomBlurProgram.uniforms.texelSize,1/t.width,1/t.height),e.uniform1i(bloomBlurProgram.uniforms.uTexture,t.attach(0)),e.viewport(0,0,m.width,m.height),blit(m.fbo),t=m}e.disable(e.BLEND),bloomFinalProgram.bind(),e.uniform2f(bloomFinalProgram.uniforms.texelSize,1/t.width,1/t.height),e.uniform1i(bloomFinalProgram.uniforms.uTexture,t.attach(0)),e.uniform1f(bloomFinalProgram.uniforms.intensity,config.BLOOM_INTENSITY),e.viewport(0,0,i.width,i.height),blit(i.fbo)}function splat(r,i,t,o,a){e.viewport(0,0,simWidth,simHeight),splatProgram.bind(),e.uniform1i(splatProgram.uniforms.uTarget,velocity.read.attach(0)),e.uniform1f(splatProgram.uniforms.aspectRatio,canvas.width/canvas.height),e.uniform2f(splatProgram.uniforms.point,r/canvas.width,1-i/canvas.height),e.uniform3f(splatProgram.uniforms.color,t,-o,1),e.uniform1f(splatProgram.uniforms.radius,config.SPLAT_RADIUS/100),blit(velocity.write.fbo),velocity.swap(),e.viewport(0,0,dyeWidth,dyeHeight),e.uniform1i(splatProgram.uniforms.uTarget,density.read.attach(0)),e.uniform3f(splatProgram.uniforms.color,a.r,a.g,a.b),blit(density.write.fbo),density.swap()}function multipleSplats(e){for(let r=0;r<e;r++){let i=generateColor();i.r*=10,i.g*=10,i.b*=10;let t=canvas.width*Math.random(),o=canvas.height*Math.random(),a=1e3*(Math.random()-.5),n=1e3*(Math.random()-.5);splat(t,o,a,n,i)}}function resizeCanvas(){(canvas.width!=canvas.clientWidth||canvas.height!=canvas.clientHeight)&&(canvas.width=canvas.clientWidth,canvas.height=canvas.clientHeight,initFramebuffers())}function generateColor(){return{r:.8,g:.8,b:.8}}function HSVtoRGB(e,r,i){let t,o,a,n,u,l,m,c;switch(n=Math.floor(6*e),u=6*e-n,l=i*(1-r),m=i*(1-u*r),c=i*(1-(1-u)*r),n%6){case 0:t=i,o=c,a=l;break;case 1:t=m,o=i,a=l;break;case 2:t=l,o=i,a=c;break;case 3:t=l,o=m,a=i;break;case 4:t=c,o=l,a=i;break;case 5:t=i,o=l,a=m}return{r:t,g:o,b:a}}function getResolution(r){let i=e.drawingBufferWidth/e.drawingBufferHeight;i<1&&(i=1/i);let t=Math.round(r*i),o=Math.round(r);return e.drawingBufferWidth>e.drawingBufferHeight?{width:t,height:o}:{width:o,height:t}}function getTextureScale(e,r,i){return{x:r/e.width,y:i/e.height}}update(),document.body.addEventListener("mousemove",e=>{pointers[0].moved=pointers[0].down,pointers[0].dx=(e.clientX-pointers[0].x)*5,pointers[0].dy=(e.clientY-pointers[0].y)*5,pointers[0].x=e.clientX,pointers[0].y=e.clientY}),document.body.addEventListener("mousemove",()=>{pointers[0].down=!0,pointers[0].color=generateColor()});
