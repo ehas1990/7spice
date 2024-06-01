@@ -2522,6 +2522,12 @@ input:focus {
   .fsz-30 {
     font-size: 20px !important;
 }
+.tc-testimonials-st2 .main-text {
+  font-size: 28px;
+  text-align: center;
+  font-style: italic;
+  padding: 9% !important;
+}
 }
 @media only screen 
   and (min-device-width:820px) 
