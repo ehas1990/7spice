@@ -14,7 +14,7 @@
 
     <!-- Title  -->
     <title>Seven Spices Restaurants </title>
-
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
  <!-- Favicon -->
  <link rel="shortcut icon" href="assets/img/fav.png" title="Favicon" sizes="16x16">
 
@@ -358,9 +358,9 @@
                                                     <img src="assets/img/7spices_product/product/breakfast/dosa.jpg" alt="MASALA DOSA VADA " class="img-cover">
                                                 </div>
                                                 <div class="inf">
-                                                    <h6 class="fsz-20 mb-15">MASALA DOSA VADA <br>
+                                                    <h6 class="fsz-20 mb-15  product_name">MASALA DOSA VADA <br>
                                                         <span class="price">
-                                                            <div class="new-price fsz-24 text-white"> $70.00 </div>
+                                                            <div class="new-price fsz-24 text-white product_price"> $70.00 </div>
                                                             <div class="old-price fsz-16 text-decoration-line-through"> $70.00 </div>
                                                         </span>
                                                     </h6>
@@ -376,53 +376,10 @@
                                         <div class="col-lg-2">
                                               <!--order  -->
                                               <!-- Button trigger modal -->
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-  Order Now
-  </button>
-  
-  <!-- Modal -->
+                                              <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#orderModal" onclick="setModalData('MASALA DOSA VADA', 70)">
+                                                Order Now
+                                            </button>
 
-    
-       
-            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h5 class="modal-title" id="exampleModalLabel">Order Name </h5>
-                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                            <div class="row">
-                                <div class="col-lg-4">
-                                        <h5>Qty</h5>
-                                </div>
-                                <div class="col-lg-8">
-                                    <span><button type="button" class="btn btn-dark me-3">+</button></span>
-                                    <span class="qty-mark me-3">10</span>
-                                    <span><button type="button" class="btn btn-dark me-3">-</button></span>
-                                </div>
-                            </div>
-                            <div class="row mt-3">
-                                <div class="col-lg-4">
-                                    <h5>price</h5>
-                                </div>
-                                <div class="col-lg-8">
-                                
-                                    <span class="total-price">10000</span>
-                                
-                                </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                      <button type="button" class="btn btn-primary">Save changes</button>
-                    </div>
-                  </div>
-                </div>
-             </div>
-   
-   
-  
  
                                               <!-- end order -->
                                         </div>
@@ -440,8 +397,11 @@
                                                     <img src="assets/img/7spices_product/product/breakfast/puttu.jpg" alt="PUTTU " class="img-cover">
                                                 </div>
                                                 <div class="inf">
-                                                    <h6 class="fsz-20 mb-15"> PUTTU  </h6>
-                                                   
+                                                    <h6 class="fsz-20 mb-15"> PUTTU <br>  </h6>
+                                                    <span class="price">
+                                                        <div class="new-price fsz-24 text-white"> $20.00 </div>
+                                                        <div class="old-price fsz-16 text-decoration-line-through"> $4.00 </div>
+                                                    </span>
                                                 </div>
                                             </div>
                                         </div>
@@ -451,10 +411,17 @@
                                             </div>
                                         </div>
                                         <div class="col-lg-2">
-                                            <div class="price">
-                                                <div class="new-price fsz-24 text-white"> $2.00 </div>
-                                                <div class="old-price fsz-16 text-decoration-line-through"> $4.00 </div>
-                                            </div>
+                                                       <!--order  -->
+                                              <!-- Button trigger modal -->
+                                              <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#orderModal" onclick="setModalData('PUTTU', 20)">
+                                                Order Now
+                                            </button>
+    
+    <!-- Modal -->
+  
+   
+                                                <!-- end order -->
+
                                         </div>
                                     </div>
                                     <!-- <img src="assets/img/7spices_product/product/breakfast/puttu.jpg" alt="" class="float-img"> -->
@@ -470,8 +437,12 @@
                                                     <img src="assets/img/7spices_product/product/breakfast/idlly.jpg" alt="IDLLY +VADA " class="img-cover">
                                                 </div>
                                                 <div class="inf">
-                                                    <h6 class="fsz-20 mb-15"> IDLLY +VADA </h6>
-                                                    
+                                                    <h6 class="fsz-20 mb-15"> IDLLY +VADA <br></h6>
+                                                    <span class="price">
+                                                        <div class="new-price fsz-24 text-white"> $35.00 </div>
+                                                        <div class="old-price fsz-16 text-decoration-line-through"> $5.00 </div>
+                                                        <div class="discount"> 20% Off </div>
+                                                    </span>
                                                 </div>
                                             </div>
                                         </div>
@@ -481,11 +452,14 @@
                                             </div>
                                         </div>
                                         <div class="col-lg-2">
-                                            <div class="price">
-                                                <div class="new-price fsz-24 text-white"> $3.00 </div>
-                                                <div class="old-price fsz-16 text-decoration-line-through"> $5.00 </div>
-                                                <div class="discount"> 20% Off </div>
-                                            </div>
+                                                    <!--order  -->
+                                              <!-- Button trigger modal -->
+                                              <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#orderModal" onclick="setModalData('IDLLY + VADA', 35)">
+                                                Order Now
+                                            </button>
+    
+   
+     <!-- end order -->
                                         </div>
                                     </div>
                                   
@@ -501,7 +475,14 @@
                                                     <img src="assets/img/7spices_product/product/breakfast/iddyapam.jpg" alt="IDIYAPPAM " class="img-cover">
                                                 </div>
                                                 <div class="inf">
-                                                    <h6 class="fsz-20 mb-15"> IDIYAPPAM </h6>
+                                                    <h6 class="fsz-20 mb-15"> IDIYAPPAM <br>
+                                                        <span class="price">
+                                                            <div class="new-price fsz-24 text-white"> $40.00 </div>
+                                                            <div class="old-price fsz-16 text-decoration-line-through"> $6.00 </div>
+                                                            <div class="discount bg-brown1"> Special </div>
+                                                        </span>
+
+                                                    </h6>
                                                   
                                                 </div>
                                             </div>
@@ -512,11 +493,13 @@
                                             </div>
                                         </div>
                                         <div class="col-lg-2">
-                                            <div class="price">
-                                                <div class="new-price fsz-24 text-white"> $4.00 </div>
-                                                <div class="old-price fsz-16 text-decoration-line-through"> $6.00 </div>
-                                                <div class="discount bg-brown1"> Special </div>
-                                            </div>
+                                                                   <!--order  -->
+                                              <!-- Button trigger modal -->
+                                              <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#orderModal" onclick="setModalData('IDIYAPPAM', 40)">
+                                                Order Now
+                                            </button>           
+
+     <!-- end order -->
                                         </div>
                                     </div>
                                    
@@ -532,7 +515,12 @@
                                                     <img src="assets/img/7spices_product/product/breakfast/appam.jpg" alt="" class="img-cover">
                                                 </div>
                                                 <div class="inf">
-                                                    <h6 class="fsz-20 mb-15"> APPAM </h6>
+                                                    <h6 class="fsz-20 mb-15"> APPAM<br>
+                                                        <span class="price">
+                                                            <div class="new-price fsz-24 text-white"> $5.00 </div>
+                                                            <div class="old-price fsz-16 text-decoration-line-through"> $8.00 </div>
+                                                        </span>
+                                                    </h6>
                                                    
                                                 </div>
                                             </div>
@@ -543,10 +531,13 @@
                                             </div>
                                         </div>
                                         <div class="col-lg-2">
-                                            <div class="price">
-                                                <div class="new-price fsz-24 text-white"> $5.00 </div>
-                                                <div class="old-price fsz-16 text-decoration-line-through"> $8.00 </div>
-                                            </div>
+                                                                                         <!--order  -->
+                                              <!-- Button trigger modal -->
+                                              <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#orderModal" onclick="setModalData('APPAM', 5)">
+                                                Order Now
+                                            </button>   
+   
+     <!-- end order -->
                                         </div>
                                     </div>
                                   
@@ -585,10 +576,9 @@
                                             </div>
                                         </div>
                                         <div class="col-lg-2">
-                                            <div class="price">
-                                                <div class="new-price fsz-24 text-white"> $70.00 </div>
-                                                <div class="old-price fsz-16 text-decoration-line-through"> $70.00 </div>
-                                            </div>
+                                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#orderModal" onclick="setModalData(' VEG MEALS', 70)">
+                                                Order Now
+                                            </button>   
                                         </div>
                                     </div>
                                    
@@ -604,7 +594,12 @@
                                                     <img src="assets/img/7spices_product/product/meals/kappa and fish.jpg" alt="KAPPA FISH CURRY" class="img-cover">
                                                 </div>
                                                 <div class="inf">
-                                                    <h6 class="fsz-20 mb-15"> KAPPA FISH CURRY </h6>
+                                                    <h6 class="fsz-20 mb-15"> KAPPA FISH CURRY<br>
+                                                    <span class="price">
+                                                        <div class="new-price fsz-24 text-white"> $69.00 </div>
+                                                        <div class="old-price fsz-16 text-decoration-line-through"> $69.00 </div>
+                                                    </span>
+                                                 </h6>
                                                    
                                                 </div>
                                             </div>
@@ -615,10 +610,10 @@
                                             </div>
                                         </div>
                                         <div class="col-lg-2">
-                                            <div class="price">
-                                                <div class="new-price fsz-24 text-white"> $69.00 </div>
-                                                <div class="old-price fsz-16 text-decoration-line-through"> $69.00 </div>
-                                            </div>
+                                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#orderModal" onclick="setModalData('KAPPA FISH CURRY',69)">
+                                            Order Now
+                                           </button>   
+                                            
                                         </div>
                                     </div>
                                   
@@ -634,7 +629,13 @@
                                                     <img src="assets/img/7spices_product/product/meals/rice gee.jpg" alt=" GHEE RICE" class="img-cover">
                                                 </div>
                                                 <div class="inf">
-                                                    <h6 class="fsz-20 mb-15"> GHEE RICE</h6>
+                                                    <h6 class="fsz-20 mb-15"> GHEE RICE <br>
+                                                        <span class="price">
+                                                            <div class="new-price fsz-24 text-white"> $110.00 </div>
+                                                            <div class="old-price fsz-16 text-decoration-line-through"> $120.00 </div>
+                                                          
+                                                        </span>
+                                                    </h6>
                                                   
                                                 </div>
                                             </div>
@@ -645,11 +646,10 @@
                                             </div>
                                         </div>
                                         <div class="col-lg-2">
-                                            <div class="price">
-                                                <div class="new-price fsz-24 text-white"> $110.00 </div>
-                                                <div class="old-price fsz-16 text-decoration-line-through"> $120.00 </div>
-                                              
-                                            </div>
+                                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#orderModal" onclick="setModalData('GHEE RICE',110)">
+                                                Order Now
+                                               </button>  
+                                            
                                         </div>
                                     </div>
                                     
@@ -665,7 +665,13 @@
                                                     <img src="assets/img/7spices_product/product/meals/kappa briyani.jpg" alt="KAPPA BIRIYANI" class="img-cover">
                                                 </div>
                                                 <div class="inf">
-                                                    <h6 class="fsz-20 mb-15">KAPPA BIRIYANI</h6>
+                                                    <h6 class="fsz-20 mb-15">KAPPA BIRIYANI <br>
+                                                        <span class="price">
+                                                            <div class="new-price fsz-24 text-white"> $160.00 </div>
+                                                            <div class="old-price fsz-16 text-decoration-line-through"> $160.00 </div>
+                                                            <div class="discount bg-brown1"> Special </div>
+                                                        </span>
+                                                    </h6>
                                                    
                                                 </div>
                                             </div>
@@ -676,11 +682,11 @@
                                             </div>
                                         </div>
                                         <div class="col-lg-2">
-                                            <div class="price">
-                                                <div class="new-price fsz-24 text-white"> $160.00 </div>
-                                                <div class="old-price fsz-16 text-decoration-line-through"> $160.00 </div>
-                                                <div class="discount bg-brown1"> Special </div>
-                                            </div>
+
+                                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#orderModal" onclick="setModalData('KAPPA BIRIYANI',160)">
+                                                Order Now
+                                               </button>  
+                                            
                                         </div>
                                     </div>
                                    
@@ -696,7 +702,12 @@
                                                     <img src="assets/img/7spices_product/product/meals/briyani.jpg" alt=" BIRIYANI" class="img-cover">
                                                 </div>
                                                 <div class="inf">
-                                                    <h6 class="fsz-20 mb-15"> BIRIYANI </h6>
+                                                    <h6 class="fsz-20 mb-15"> BIRIYANI <br>
+                                                        <span class="price">
+                                                            <div class="new-price fsz-24 text-white"> $130.00 </div>
+                                                            <div class="old-price fsz-16 text-decoration-line-through"> $150.00 </div>
+                                                        </span>
+                                                    </h6>
                                                    
                                                 </div>
                                             </div>
@@ -707,10 +718,9 @@
                                             </div>
                                         </div>
                                         <div class="col-lg-2">
-                                            <div class="price">
-                                                <div class="new-price fsz-24 text-white"> $130.00 </div>
-                                                <div class="old-price fsz-16 text-decoration-line-through"> $150.00 </div>
-                                            </div>
+                                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#orderModal" onclick="setModalData(' BIRIYANI',130)">
+                                                Order Now
+                                               </button>  
                                         </div>
                                     </div>
                                   
@@ -734,7 +744,12 @@
                                                     <img src="assets/img/7spices_product/product/chines/chill chicken.jpg" alt="CHILLY CHICKEN" class="img-cover">
                                                 </div>
                                                 <div class="inf">
-                                                    <h6 class="fsz-20 mb-15"> CHILLY CHICKEN </h6>
+                                                    <h6 class="fsz-20 mb-15"> CHILLY CHICKEN <br>
+                                                        <span class="price">
+                                                            <div class="new-price fsz-24 text-white"> $160.00 </div>
+                                                            <div class="old-price fsz-16 text-decoration-line-through"> $180.00 </div>
+                                                        </span>
+                                                    </h6>
                                                    
                                                 </div>
                                             </div>
@@ -745,10 +760,9 @@
                                             </div>
                                         </div>
                                         <div class="col-lg-2">
-                                            <div class="price">
-                                                <div class="new-price fsz-24 text-white"> $160.00 </div>
-                                                <div class="old-price fsz-16 text-decoration-line-through"> $180.00 </div>
-                                            </div>
+                                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#orderModal" onclick="setModalData(' CHILLY CHICKEN',160)">
+                                                Order Now
+                                               </button>  
                                         </div>
                                     </div>
                                    
@@ -764,7 +778,14 @@
                                                     <img src="assets/img/7spices_product/product/chines/chill panner.jpg" alt="PANEER BUTTER MASALA" class="img-cover">
                                                 </div>
                                                 <div class="inf">
-                                                    <h6 class="fsz-20 mb-15"> PANEER BUTTER MASALA  </h6>
+                                                    <h6 class="fsz-20 mb-15"> PANEER BUTTER MASALA <br>
+                                                        
+                                             <span class="price">   
+                                                <div class="new-price fsz-24 text-white"> $140.00 </div>
+                                                <div class="old-price fsz-16 text-decoration-line-through"> $155.00 </div>
+                                             </span>
+                                                    
+                                                    </h6>
                                                     
                                                 </div>
                                             </div>
@@ -775,10 +796,11 @@
                                             </div>
                                         </div>
                                         <div class="col-lg-2">
-                                            <div class="price">
-                                                <div class="new-price fsz-24 text-white"> $140.00 </div>
-                                                <div class="old-price fsz-16 text-decoration-line-through"> $155.00 </div>
-                                            </div>
+                                           
+                                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#orderModal" onclick="setModalData(' PANEER BUTTER MASALA ',140)">
+                                                    Order Now
+                                                   </button> 
+
                                         </div>
                                     </div>
                                  
@@ -794,7 +816,13 @@
                                                     <img src="assets/img/7spices_product/product/chines/fried rice.jpg" alt=" MIXED FRIED RICE" class="img-cover">
                                                 </div>
                                                 <div class="inf">
-                                                    <h6 class="fsz-20 mb-15"> MIXED FRIED RICE </h6>
+                                                    <h6 class="fsz-20 mb-15"> MIXED FRIED RICE <br>
+                                                        <span class="price">
+                                                            <div class="new-price fsz-24 text-white"> $160.00 </div>
+                                                            <div class="old-price fsz-16 text-decoration-line-through"> $180.00 </div>
+                                                            <div class="discount"> 20% Off </div>
+                                                        </span>
+                                                    </h6>
                                                  
                                                 </div>
                                             </div>
@@ -805,11 +833,9 @@
                                             </div>
                                         </div>
                                         <div class="col-lg-2">
-                                            <div class="price">
-                                                <div class="new-price fsz-24 text-white"> $160.00 </div>
-                                                <div class="old-price fsz-16 text-decoration-line-through"> $180.00 </div>
-                                                <div class="discount"> 20% Off </div>
-                                            </div>
+                                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#orderModal" onclick="setModalData(' MIXED FRIED RICE ',160)">
+                                                Order Now
+                                               </button> 
                                         </div>
                                     </div>
                                    
@@ -825,7 +851,15 @@
                                                     <img src="assets/img/7spices_product/product/chines/gobi.jpg" alt="" class="img-cover">
                                                 </div>
                                                 <div class="inf">
-                                                    <h6 class="fsz-20 mb-15">CHILLI GOBI (DRY/GRAVY) </h6>
+                                                    <h6 class="fsz-20 mb-15">CHILLI GOBI (DRY/GRAVY) <br>
+                                                        <span class="price">
+
+                                                            <div class="new-price fsz-24 text-white"> $120.00 </div>
+                                                            <div class="old-price fsz-16 text-decoration-line-through"> $135.00 </div>
+                                                            <div class="discount bg-brown1"> Special </div>
+                                                        </span>
+
+                                                    </h6>
                                                   
                                                 </div>
                                             </div>
@@ -836,11 +870,10 @@
                                             </div>
                                         </div>
                                         <div class="col-lg-2">
-                                            <div class="price">
-                                                <div class="new-price fsz-24 text-white"> $120.00 </div>
-                                                <div class="old-price fsz-16 text-decoration-line-through"> $135.00 </div>
-                                                <div class="discount bg-brown1"> Special </div>
-                                            </div>
+                                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#orderModal" onclick="setModalData('CHILLI GOBI (DRY/GRAVY)  ',120)">
+                                                Order Now
+                                               </button> 
+                                           
                                         </div>
                                     </div>
                                    
@@ -856,7 +889,15 @@
                                                     <img src="assets/img/7spices_product/product/chines/noodles.jpg" alt="" class="img-cover">
                                                 </div>
                                                 <div class="inf">
-                                                    <h6 class="fsz-20 mb-15">MIXED NOODLES  </h6>
+                                                    <h6 class="fsz-20 mb-15">MIXED NOODLES 
+                                                        
+                                                        <span class="price">
+                                                            <div class="new-price fsz-24 text-white"> $160.00 </div>
+                                                            <div class="old-price fsz-16 text-decoration-line-through"> $170.00 </div>
+                                                        </span>
+                                                    
+                                                    
+                                                    </h6>
                                                   
                                                 </div>
                                             </div>
@@ -867,10 +908,11 @@
                                             </div>
                                         </div>
                                         <div class="col-lg-2">
-                                            <div class="price">
-                                                <div class="new-price fsz-24 text-white"> $160.00 </div>
-                                                <div class="old-price fsz-16 text-decoration-line-through"> $170.00 </div>
-                                            </div>
+                                                 
+                                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#orderModal" onclick="setModalData('MIXED NOODLES',160)">
+                                                Order Now
+                                               </button> 
+                                                 
                                         </div>
                                     </div>
                                     
@@ -1170,7 +1212,40 @@
         <i class="fal fa fa-angle-up"></i>
     </a>
     <!--  End to top button  -->
-
+    <div class="modal fade" id="orderModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="productTitle"></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <h5>Qty</h5>
+                        </div>
+                        <div class="col-lg-8">
+                            <span><button type="button" class="btn btn-dark me-3" onclick="changeQuantity(1)">+</button></span>
+                            <span class="qty-mark me-3" id="quantity">1</span>
+                            <span><button type="button" class="btn btn-dark me-3" onclick="changeQuantity(-1)">-</button></span>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-lg-4">
+                            <h5>Price</h5>
+                        </div>
+                        <div class="col-lg-8">
+                            <span class="total-price" id="totalPrice"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <!--  request  -->
     <script src="./common/assets/js/lib/jquery-3.0.0.min.js"></script>
     <script src="./common/assets/js/lib/jquery-migrate-3.0.0.min.js"></script>
@@ -1193,7 +1268,7 @@
 
     <!-- ===== home scripts ===== -->
     <script src="./assets/js/home_2_scripts.js"></script>
-
+    <script src="./common/assets/js/order.js"></script>
 </body>
 
 
