@@ -2548,3 +2548,30 @@ input:focus {
 }
 
 
+.modal-backdrop.fade.show {
+  z-index: -1;
+}
+.modal-content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  color: var(--bs-modal-color);
+  pointer-events: auto;
+  background-color: #2a2a2aeb !important;
+  background-clip: padding-box;
+  border: var(--bs-modal-border-width) solid var(--bs-modal-border-color);
+  border-radius: var(--bs-modal-border-radius);
+  outline: 0;
+
+  padding: 40px 15px;
+  border-radius: 30px;
+  overflow: hidden;
+  border: 1px dashed #a77617 !important;
+}
+
+.qty-mark
+{
+  border: 1px dashed #a77617 !important;
+  padding:15px 15px;
+}

@@ -6,7 +6,7 @@ $( function() {
         boxClass: 'wow',
         animateClass: 'animated',
         offset: 200,
-        mobile: false,
+        mobile: true,
         live: false
     });
     wow.init();
