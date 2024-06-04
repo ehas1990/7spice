@@ -14,7 +14,8 @@
 
     <!-- Title  -->
     <title>Seven Spices Restaurants</title>
-
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
  <!-- Favicon -->
  <link rel="shortcut icon" href="assets/img/fav.png" title="Favicon" sizes="16x16">
 
@@ -247,44 +248,37 @@
         <!--Contents-->
         <main>
 
-      
-
-            <!--  Start clients  -->
-           
-            <!--  End clients  -->
-
-
             <!--  Start menus  -->
-            <section class="tc-menus-st2 mt-15">
+            <section class="tc-menus-st2">
                 <div class="container">
                     <div class="title text-center col-lg-6 mx-auto mb-50 wow fadeInUp slow" data-wow-delay="0.2s">
                         <div class="icon icon-50 mx-auto">
-                            <img src="assets/img/icons/icon/orange-juice.png" alt="" class="img-contain">
+                            <img src="assets/img/icons/icon/orange-juice.png" alt="orange-juice" class="img-contain">
                         </div>
                         <h2 class="fsz-50 mt-15">  </h2>
-                        <!-- <div class="text fsz-16 mt-20"> Proin at lorem justo. Sed maximus risus hendrerit ipsum sodales, vel consequat dui ultrices. Vestibulum ante ipsum primis in faucibus orci luctus. </div> -->
+                       
                     </div>
                     <ul class="nav nav-pills wow fadeInUp slow" data-wow-delay="0.2s" id="pills-tab" role="tablist">
                         <!-- <li class="nav-item" role="presentation">
                             <button class="nav-link active" id="pills-tab1-tab" data-bs-toggle="pill" data-bs-target="#pills-tab">All</button>
                         </li> -->
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="pills-tab2-tab" data-bs-toggle="pill" data-bs-target="#pills-tab1">BREAK FAST</button>
+                            <button class="nav-link" id="pills-tab-tab" data-bs-toggle="pill" data-bs-target="#pills-tab1">BREAK FAST</button>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="pills-tab3-tab" data-bs-toggle="pill" data-bs-target="#pills-tab2">LUNCH</button>
+                            <button class="nav-link" id="pills-tab1-tab" data-bs-toggle="pill" data-bs-target="#pills-tab2">LUNCH</button>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="pills-tab4-tab" data-bs-toggle="pill" data-bs-target="#pills-tab3"> CHINESS</button>
+                            <button class="nav-link" id="pills-tab2-tab" data-bs-toggle="pill" data-bs-target="#pills-tab3"> CHINESS</button>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="pills-tab5-tab" data-bs-toggle="pill" data-bs-target="#pills-tab4">JUICE</button>
+                            <button class="nav-link" id="pills-tab3-tab" data-bs-toggle="pill" data-bs-target="#pills-tab4">JUICE</button>
                       </li>
                     </ul>
                     <div class="tab-content wow fadeInUp slow" data-wow-delay="0.2s" id="pills-tabContent">
                         
                       
-                        <div class="tab-pane fade show active" id="pills-tab1">
+                        <div class="tab-pane fade show active " id="pills-tab1">
                             <div class="menu-list">
                                 <a href="#" class="list-item">
                                     <div class="row align-items-center">
@@ -294,10 +288,15 @@
                                         <div class="col-lg-4">
                                             <div class="main-inf">
                                                 <div class="img">
-                                                    <img src="assets/img/7spices_product/product/breakfast/dosa.jpg" alt="" class="img-cover">
+                                                    <img src="assets/img/7spices_product/product/breakfast/dosa.jpg" alt="MASALA DOSA VADA " class="img-cover">
                                                 </div>
                                                 <div class="inf">
-                                                    <h6 class="fsz-20 mb-15">MASALA DOSA VADA </h6>
+                                                    <h6 class="fsz-20 mb-15  product_name">MASALA DOSA VADA <br>
+                                                        <span class="price">
+                                                            <div class="new-price fsz-24 text-white product_price"> $70.00 </div>
+                                                            <div class="old-price fsz-16 text-decoration-line-through"> $70.00 </div>
+                                                        </span>
+                                                    </h6>
                                                    
                                                 </div>
                                             </div>
@@ -308,13 +307,17 @@
                                             </div>
                                         </div>
                                         <div class="col-lg-2">
-                                            <div class="price">
-                                                <div class="new-price fsz-24 text-white"> $70.00 </div>
-                                                <div class="old-price fsz-16 text-decoration-line-through"> $70.00 </div>
-                                            </div>
+                                              <!--order  -->
+                                              <!-- Button trigger modal -->
+                                              <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#orderModal" onclick="setModalData('MASALA DOSA VADA', 70)">
+                                                Order Now
+                                            </button>
+
+ 
+                                              <!-- end order -->
                                         </div>
                                     </div>
-                                    <img src="assets/img/7spices_product/product/breakfast/dosa.jpg" alt="" class="float-img">
+                                   
                                 </a>
                                 <a href="#" class="list-item">
                                     <div class="row align-items-center">
@@ -324,11 +327,14 @@
                                         <div class="col-lg-4">
                                             <div class="main-inf">
                                                 <div class="img">
-                                                    <img src="assets/img/7spices_product/product/breakfast/puttu.jpg" alt="" class="img-cover">
+                                                    <img src="assets/img/7spices_product/product/breakfast/puttu.jpg" alt="PUTTU " class="img-cover">
                                                 </div>
                                                 <div class="inf">
-                                                    <h6 class="fsz-20 mb-15"> PUTTU  </h6>
-                                                   
+                                                    <h6 class="fsz-20 mb-15"> PUTTU <br>  </h6>
+                                                    <span class="price">
+                                                        <div class="new-price fsz-24 text-white"> $20.00 </div>
+                                                        <div class="old-price fsz-16 text-decoration-line-through"> $4.00 </div>
+                                                    </span>
                                                 </div>
                                             </div>
                                         </div>
@@ -338,13 +344,20 @@
                                             </div>
                                         </div>
                                         <div class="col-lg-2">
-                                            <div class="price">
-                                                <div class="new-price fsz-24 text-white"> $2.00 </div>
-                                                <div class="old-price fsz-16 text-decoration-line-through"> $4.00 </div>
-                                            </div>
+                                                       <!--order  -->
+                                              <!-- Button trigger modal -->
+                                              <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#orderModal" onclick="setModalData('PUTTU', 20)">
+                                                Order Now
+                                            </button>
+    
+    <!-- Modal -->
+  
+   
+                                                <!-- end order -->
+
                                         </div>
                                     </div>
-                                    <img src="assets/img/7spices_product/product/breakfast/puttu.jpg" alt="" class="float-img">
+                                    <!-- <img src="assets/img/7spices_product/product/breakfast/puttu.jpg" alt="" class="float-img"> -->
                                 </a>
                                 <a href="#" class="list-item">
                                     <div class="row align-items-center">
@@ -354,11 +367,15 @@
                                         <div class="col-lg-4">
                                             <div class="main-inf">
                                                 <div class="img">
-                                                    <img src="assets/img/7spices_product/product/breakfast/idlly.jpg" alt="" class="img-cover">
+                                                    <img src="assets/img/7spices_product/product/breakfast/idlly.jpg" alt="IDLLY +VADA " class="img-cover">
                                                 </div>
                                                 <div class="inf">
-                                                    <h6 class="fsz-20 mb-15"> IDLLY +VADA </h6>
-                                                    
+                                                    <h6 class="fsz-20 mb-15"> IDLLY +VADA <br></h6>
+                                                    <span class="price">
+                                                        <div class="new-price fsz-24 text-white"> $35.00 </div>
+                                                        <div class="old-price fsz-16 text-decoration-line-through"> $5.00 </div>
+                                                        <div class="discount"> 20% Off </div>
+                                                    </span>
                                                 </div>
                                             </div>
                                         </div>
@@ -368,14 +385,17 @@
                                             </div>
                                         </div>
                                         <div class="col-lg-2">
-                                            <div class="price">
-                                                <div class="new-price fsz-24 text-white"> $3.00 </div>
-                                                <div class="old-price fsz-16 text-decoration-line-through"> $5.00 </div>
-                                                <div class="discount"> 20% Off </div>
-                                            </div>
+                                                    <!--order  -->
+                                              <!-- Button trigger modal -->
+                                              <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#orderModal" onclick="setModalData('IDLLY + VADA', 35)">
+                                                Order Now
+                                            </button>
+    
+   
+     <!-- end order -->
                                         </div>
                                     </div>
-                                    <img src="assets/img/7spices_product/product/breakfast/idlly.jpg" alt="" class="float-img">
+                                  
                                 </a>
                                 <a href="#" class="list-item">
                                     <div class="row align-items-center">
@@ -385,10 +405,17 @@
                                         <div class="col-lg-4">
                                             <div class="main-inf">
                                                 <div class="img">
-                                                    <img src="assets/img/7spices_product/product/breakfast/iddyapam.jpg" alt="" class="img-cover">
+                                                    <img src="assets/img/7spices_product/product/breakfast/iddyapam.jpg" alt="IDIYAPPAM " class="img-cover">
                                                 </div>
                                                 <div class="inf">
-                                                    <h6 class="fsz-20 mb-15"> IDIYAPPAM </h6>
+                                                    <h6 class="fsz-20 mb-15"> IDIYAPPAM <br>
+                                                        <span class="price">
+                                                            <div class="new-price fsz-24 text-white"> $40.00 </div>
+                                                            <div class="old-price fsz-16 text-decoration-line-through"> $6.00 </div>
+                                                            <div class="discount bg-brown1"> Special </div>
+                                                        </span>
+
+                                                    </h6>
                                                   
                                                 </div>
                                             </div>
@@ -399,14 +426,16 @@
                                             </div>
                                         </div>
                                         <div class="col-lg-2">
-                                            <div class="price">
-                                                <div class="new-price fsz-24 text-white"> $4.00 </div>
-                                                <div class="old-price fsz-16 text-decoration-line-through"> $6.00 </div>
-                                                <div class="discount bg-brown1"> Special </div>
-                                            </div>
+                                                                   <!--order  -->
+                                              <!-- Button trigger modal -->
+                                              <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#orderModal" onclick="setModalData('IDIYAPPAM', 40)">
+                                                Order Now
+                                            </button>           
+
+     <!-- end order -->
                                         </div>
                                     </div>
-                                    <img src="assets/img/7spices_product/product/breakfast/iddyapam.jpg" alt="" class="float-img">
+                                   
                                 </a>
                                 <a href="#" class="list-item">
                                     <div class="row align-items-center">
@@ -419,7 +448,12 @@
                                                     <img src="assets/img/7spices_product/product/breakfast/appam.jpg" alt="" class="img-cover">
                                                 </div>
                                                 <div class="inf">
-                                                    <h6 class="fsz-20 mb-15"> APPAM </h6>
+                                                    <h6 class="fsz-20 mb-15"> APPAM<br>
+                                                        <span class="price">
+                                                            <div class="new-price fsz-24 text-white"> $5.00 </div>
+                                                            <div class="old-price fsz-16 text-decoration-line-through"> $8.00 </div>
+                                                        </span>
+                                                    </h6>
                                                    
                                                 </div>
                                             </div>
@@ -430,17 +464,20 @@
                                             </div>
                                         </div>
                                         <div class="col-lg-2">
-                                            <div class="price">
-                                                <div class="new-price fsz-24 text-white"> $5.00 </div>
-                                                <div class="old-price fsz-16 text-decoration-line-through"> $8.00 </div>
-                                            </div>
+                                                                                         <!--order  -->
+                                              <!-- Button trigger modal -->
+                                              <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#orderModal" onclick="setModalData('APPAM', 5)">
+                                                Order Now
+                                            </button>   
+   
+     <!-- end order -->
                                         </div>
                                     </div>
-                                    <img src="assets/img/7spices_product/product/breakfast/appam.jpg" alt="" class="float-img">
+                                  
                                 </a>
                             </div>
                             <div class="text-center mt-50">
-                                <a href="#" class="butn bg-brown1 text-white rounded-pill size-1 hover-bg-dark1 mx-2"> <span> View all + </span> </a>
+                                <a href="#" class="butn bg-brown1 text-white rounded-pill size-1 hover-bg-dark1 mx-2"> <span> Read More + </span> </a>
                             </div>
                         </div>
                         <div class="tab-pane fade" id="pills-tab2">
@@ -453,10 +490,15 @@
                                         <div class="col-lg-4">
                                             <div class="main-inf">
                                                 <div class="img">
-                                                    <img src="assets/img/7spices_product/product/meals/meals.jpg" alt="" class="img-cover">
+                                                    <img src="assets/img/7spices_product/product/meals/meals.jpg" alt="VEG MEALS" class="img-cover">
                                                 </div>
                                                 <div class="inf">
-                                                    <h6 class="fsz-20 mb-15">VEG MEALS </h6>
+                                                    <h6 class="fsz-20 mb-15">VEG MEALS<br>
+                                                        <span class="price">
+                                                            <div class="new-price fsz-24 text-white"> $70.00 </div>
+                                                            <div class="old-price fsz-16 text-decoration-line-through"> $70.00 </div>
+                                                        </span>
+                                                    </h6>
                                                   
                                                 </div>
                                             </div>
@@ -467,13 +509,12 @@
                                             </div>
                                         </div>
                                         <div class="col-lg-2">
-                                            <div class="price">
-                                                <div class="new-price fsz-24 text-white"> $70.00 </div>
-                                                <div class="old-price fsz-16 text-decoration-line-through"> $70.00 </div>
-                                            </div>
+                                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#orderModal" onclick="setModalData(' VEG MEALS', 70)">
+                                                Order Now
+                                            </button>   
                                         </div>
                                     </div>
-                                    <img src="assets/img/7spices_product/product/meals/meals.jpg" alt="" class="float-img">
+                                   
                                 </a>
                                 <a href="#" class="list-item">
                                     <div class="row align-items-center">
@@ -483,10 +524,15 @@
                                         <div class="col-lg-4">
                                             <div class="main-inf">
                                                 <div class="img">
-                                                    <img src="assets/img/7spices_product/product/meals/kappa and fish.jpg" alt="" class="img-cover">
+                                                    <img src="assets/img/7spices_product/product/meals/kappa and fish.jpg" alt="KAPPA FISH CURRY" class="img-cover">
                                                 </div>
                                                 <div class="inf">
-                                                    <h6 class="fsz-20 mb-15"> KAPPA FISH CURRY </h6>
+                                                    <h6 class="fsz-20 mb-15"> KAPPA FISH CURRY<br>
+                                                    <span class="price">
+                                                        <div class="new-price fsz-24 text-white"> $69.00 </div>
+                                                        <div class="old-price fsz-16 text-decoration-line-through"> $69.00 </div>
+                                                    </span>
+                                                 </h6>
                                                    
                                                 </div>
                                             </div>
@@ -497,13 +543,13 @@
                                             </div>
                                         </div>
                                         <div class="col-lg-2">
-                                            <div class="price">
-                                                <div class="new-price fsz-24 text-white"> $69.00 </div>
-                                                <div class="old-price fsz-16 text-decoration-line-through"> $69.00 </div>
-                                            </div>
+                                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#orderModal" onclick="setModalData('KAPPA FISH CURRY',69)">
+                                            Order Now
+                                           </button>   
+                                            
                                         </div>
                                     </div>
-                                    <img src="assets/img/7spices_product/product/meals/kappa and fish.jpg" alt="" class="float-img">
+                                  
                                 </a>
                                 <a href="#" class="list-item">
                                     <div class="row align-items-center">
@@ -513,10 +559,16 @@
                                         <div class="col-lg-4">
                                             <div class="main-inf">
                                                 <div class="img">
-                                                    <img src="assets/img/7spices_product/product/meals/rice gee.jpg" alt="" class="img-cover">
+                                                    <img src="assets/img/7spices_product/product/meals/rice gee.jpg" alt=" GHEE RICE" class="img-cover">
                                                 </div>
                                                 <div class="inf">
-                                                    <h6 class="fsz-20 mb-15"> GHEE RICE</h6>
+                                                    <h6 class="fsz-20 mb-15"> GHEE RICE <br>
+                                                        <span class="price">
+                                                            <div class="new-price fsz-24 text-white"> $110.00 </div>
+                                                            <div class="old-price fsz-16 text-decoration-line-through"> $120.00 </div>
+                                                          
+                                                        </span>
+                                                    </h6>
                                                   
                                                 </div>
                                             </div>
@@ -527,14 +579,13 @@
                                             </div>
                                         </div>
                                         <div class="col-lg-2">
-                                            <div class="price">
-                                                <div class="new-price fsz-24 text-white"> $110.00 </div>
-                                                <div class="old-price fsz-16 text-decoration-line-through"> $120.00 </div>
-                                              
-                                            </div>
+                                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#orderModal" onclick="setModalData('GHEE RICE',110)">
+                                                Order Now
+                                               </button>  
+                                            
                                         </div>
                                     </div>
-                                    <img src="assets/img/7spices_product/product/meals/rice gee.jpg" alt="" class="float-img">
+                                    
                                 </a>
                                 <a href="#" class="list-item">
                                     <div class="row align-items-center">
@@ -544,10 +595,16 @@
                                         <div class="col-lg-4">
                                             <div class="main-inf">
                                                 <div class="img">
-                                                    <img src="assets/img/7spices_product/product/meals/kappa briyani.jpg" alt="" class="img-cover">
+                                                    <img src="assets/img/7spices_product/product/meals/kappa briyani.jpg" alt="KAPPA BIRIYANI" class="img-cover">
                                                 </div>
                                                 <div class="inf">
-                                                    <h6 class="fsz-20 mb-15">KAPPA BIRIYANI</h6>
+                                                    <h6 class="fsz-20 mb-15">KAPPA BIRIYANI <br>
+                                                        <span class="price">
+                                                            <div class="new-price fsz-24 text-white"> $160.00 </div>
+                                                            <div class="old-price fsz-16 text-decoration-line-through"> $160.00 </div>
+                                                            <div class="discount bg-brown1"> Special </div>
+                                                        </span>
+                                                    </h6>
                                                    
                                                 </div>
                                             </div>
@@ -558,14 +615,14 @@
                                             </div>
                                         </div>
                                         <div class="col-lg-2">
-                                            <div class="price">
-                                                <div class="new-price fsz-24 text-white"> $160.00 </div>
-                                                <div class="old-price fsz-16 text-decoration-line-through"> $160.00 </div>
-                                                <div class="discount bg-brown1"> Special </div>
-                                            </div>
+
+                                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#orderModal" onclick="setModalData('KAPPA BIRIYANI',160)">
+                                                Order Now
+                                               </button>  
+                                            
                                         </div>
                                     </div>
-                                    <img src="assets/img/7spices_product/product/meals/kappa briyani.jpg" alt="" class="float-img">
+                                   
                                 </a>
                                 <a href="#" class="list-item">
                                     <div class="row align-items-center">
@@ -575,10 +632,15 @@
                                         <div class="col-lg-4">
                                             <div class="main-inf">
                                                 <div class="img">
-                                                    <img src="assets/img/7spices_product/product/meals/briyani.jpg" alt="" class="img-cover">
+                                                    <img src="assets/img/7spices_product/product/meals/briyani.jpg" alt=" BIRIYANI" class="img-cover">
                                                 </div>
                                                 <div class="inf">
-                                                    <h6 class="fsz-20 mb-15"> BIRIYANI </h6>
+                                                    <h6 class="fsz-20 mb-15"> BIRIYANI <br>
+                                                        <span class="price">
+                                                            <div class="new-price fsz-24 text-white"> $130.00 </div>
+                                                            <div class="old-price fsz-16 text-decoration-line-through"> $150.00 </div>
+                                                        </span>
+                                                    </h6>
                                                    
                                                 </div>
                                             </div>
@@ -589,17 +651,16 @@
                                             </div>
                                         </div>
                                         <div class="col-lg-2">
-                                            <div class="price">
-                                                <div class="new-price fsz-24 text-white"> $130.00 </div>
-                                                <div class="old-price fsz-16 text-decoration-line-through"> $150.00 </div>
-                                            </div>
+                                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#orderModal" onclick="setModalData(' BIRIYANI',130)">
+                                                Order Now
+                                               </button>  
                                         </div>
                                     </div>
-                                    <img src="assets/img/7spices_product/product/meals/briyani.jpg" alt="" class="float-img">
+                                  
                                 </a>
                             </div>
                             <div class="text-center mt-50">
-                                <a href="#" class="butn bg-brown1 text-white rounded-pill size-1 hover-bg-dark1 mx-2"> <span> View all  + </span> </a>
+                                <a href="#" class="butn bg-brown1 text-white rounded-pill size-1 hover-bg-dark1 mx-2"> <span> Read More  + </span> </a>
                             </div>
                         </div>
                        
@@ -613,10 +674,15 @@
                                         <div class="col-lg-4">
                                             <div class="main-inf">
                                                 <div class="img">
-                                                    <img src="assets/img/7spices_product/product/chines/chill chicken.jpg" alt="" class="img-cover">
+                                                    <img src="assets/img/7spices_product/product/chines/chill chicken.jpg" alt="CHILLY CHICKEN" class="img-cover">
                                                 </div>
                                                 <div class="inf">
-                                                    <h6 class="fsz-20 mb-15"> CHILLY CHICKEN </h6>
+                                                    <h6 class="fsz-20 mb-15"> CHILLY CHICKEN <br>
+                                                        <span class="price">
+                                                            <div class="new-price fsz-24 text-white"> $160.00 </div>
+                                                            <div class="old-price fsz-16 text-decoration-line-through"> $180.00 </div>
+                                                        </span>
+                                                    </h6>
                                                    
                                                 </div>
                                             </div>
@@ -627,13 +693,12 @@
                                             </div>
                                         </div>
                                         <div class="col-lg-2">
-                                            <div class="price">
-                                                <div class="new-price fsz-24 text-white"> $160.00 </div>
-                                                <div class="old-price fsz-16 text-decoration-line-through"> $180.00 </div>
-                                            </div>
+                                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#orderModal" onclick="setModalData(' CHILLY CHICKEN',160)">
+                                                Order Now
+                                               </button>  
                                         </div>
                                     </div>
-                                    <img src="assets/img/7spices_product/product/chines/chill chicken.jpg" alt="" class="float-img">
+                                   
                                 </a>
                                 <a href="#" class="list-item">
                                     <div class="row align-items-center">
@@ -643,10 +708,17 @@
                                         <div class="col-lg-4">
                                             <div class="main-inf">
                                                 <div class="img">
-                                                    <img src="assets/img/7spices_product/product/chines/chill panner.jpg" alt="" class="img-cover">
+                                                    <img src="assets/img/7spices_product/product/chines/chill panner.jpg" alt="PANEER BUTTER MASALA" class="img-cover">
                                                 </div>
                                                 <div class="inf">
-                                                    <h6 class="fsz-20 mb-15"> PANEER BUTTER MASALA  </h6>
+                                                    <h6 class="fsz-20 mb-15"> PANEER BUTTER MASALA <br>
+                                                        
+                                             <span class="price">   
+                                                <div class="new-price fsz-24 text-white"> $140.00 </div>
+                                                <div class="old-price fsz-16 text-decoration-line-through"> $155.00 </div>
+                                             </span>
+                                                    
+                                                    </h6>
                                                     
                                                 </div>
                                             </div>
@@ -657,13 +729,14 @@
                                             </div>
                                         </div>
                                         <div class="col-lg-2">
-                                            <div class="price">
-                                                <div class="new-price fsz-24 text-white"> $140.00 </div>
-                                                <div class="old-price fsz-16 text-decoration-line-through"> $155.00 </div>
-                                            </div>
+                                           
+                                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#orderModal" onclick="setModalData(' PANEER BUTTER MASALA ',140)">
+                                                    Order Now
+                                                   </button> 
+
                                         </div>
                                     </div>
-                                    <img src="assets/img/7spices_product/product/chines/chill panner.jpg" alt="" class="float-img">
+                                 
                                 </a>
                                 <a href="#" class="list-item">
                                     <div class="row align-items-center">
@@ -673,10 +746,16 @@
                                         <div class="col-lg-4">
                                             <div class="main-inf">
                                                 <div class="img">
-                                                    <img src="assets/img/7spices_product/product/chines/fried rice.jpg" alt="" class="img-cover">
+                                                    <img src="assets/img/7spices_product/product/chines/fried rice.jpg" alt=" MIXED FRIED RICE" class="img-cover">
                                                 </div>
                                                 <div class="inf">
-                                                    <h6 class="fsz-20 mb-15"> MIXED FRIED RICE </h6>
+                                                    <h6 class="fsz-20 mb-15"> MIXED FRIED RICE <br>
+                                                        <span class="price">
+                                                            <div class="new-price fsz-24 text-white"> $160.00 </div>
+                                                            <div class="old-price fsz-16 text-decoration-line-through"> $180.00 </div>
+                                                            <div class="discount"> 20% Off </div>
+                                                        </span>
+                                                    </h6>
                                                  
                                                 </div>
                                             </div>
@@ -687,14 +766,12 @@
                                             </div>
                                         </div>
                                         <div class="col-lg-2">
-                                            <div class="price">
-                                                <div class="new-price fsz-24 text-white"> $160.00 </div>
-                                                <div class="old-price fsz-16 text-decoration-line-through"> $180.00 </div>
-                                                <div class="discount"> 20% Off </div>
-                                            </div>
+                                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#orderModal" onclick="setModalData(' MIXED FRIED RICE ',160)">
+                                                Order Now
+                                               </button> 
                                         </div>
                                     </div>
-                                    <img src="assets/img/7spices_product/product/chines/fried rice.jpg" alt="" class="float-img">
+                                   
                                 </a>
                                 <a href="#" class="list-item">
                                     <div class="row align-items-center">
@@ -707,7 +784,15 @@
                                                     <img src="assets/img/7spices_product/product/chines/gobi.jpg" alt="" class="img-cover">
                                                 </div>
                                                 <div class="inf">
-                                                    <h6 class="fsz-20 mb-15">CHILLI GOBI (DRY/GRAVY) </h6>
+                                                    <h6 class="fsz-20 mb-15">CHILLI GOBI (DRY/GRAVY) <br>
+                                                        <span class="price">
+
+                                                            <div class="new-price fsz-24 text-white"> $120.00 </div>
+                                                            <div class="old-price fsz-16 text-decoration-line-through"> $135.00 </div>
+                                                            <div class="discount bg-brown1"> Special </div>
+                                                        </span>
+
+                                                    </h6>
                                                   
                                                 </div>
                                             </div>
@@ -718,14 +803,13 @@
                                             </div>
                                         </div>
                                         <div class="col-lg-2">
-                                            <div class="price">
-                                                <div class="new-price fsz-24 text-white"> $120.00 </div>
-                                                <div class="old-price fsz-16 text-decoration-line-through"> $135.00 </div>
-                                                <div class="discount bg-brown1"> Special </div>
-                                            </div>
+                                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#orderModal" onclick="setModalData('CHILLI GOBI (DRY/GRAVY)  ',120)">
+                                                Order Now
+                                               </button> 
+                                           
                                         </div>
                                     </div>
-                                    <img src="assets/img/7spices_product/product/chines/gobi.jpg" alt="" class="float-img">
+                                   
                                 </a>
                                 <a href="#" class="list-item">
                                     <div class="row align-items-center">
@@ -738,7 +822,15 @@
                                                     <img src="assets/img/7spices_product/product/chines/noodles.jpg" alt="" class="img-cover">
                                                 </div>
                                                 <div class="inf">
-                                                    <h6 class="fsz-20 mb-15">MIXED NOODLES  </h6>
+                                                    <h6 class="fsz-20 mb-15">MIXED NOODLES <br>
+                                                        
+                                                        <span class="price">
+                                                            <div class="new-price fsz-24 text-white"> $160.00 </div>
+                                                            <div class="old-price fsz-16 text-decoration-line-through"> $170.00 </div>
+                                                        </span>
+                                                    
+                                                    
+                                                    </h6>
                                                   
                                                 </div>
                                             </div>
@@ -749,17 +841,204 @@
                                             </div>
                                         </div>
                                         <div class="col-lg-2">
-                                            <div class="price">
-                                                <div class="new-price fsz-24 text-white"> $160.00 </div>
-                                                <div class="old-price fsz-16 text-decoration-line-through"> $170.00 </div>
-                                            </div>
+                                                 
+                                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#orderModal" onclick="setModalData('MIXED NOODLES',160)">
+                                                Order Now
+                                               </button> 
+                                                 
                                         </div>
                                     </div>
-                                    <img src="assets/img/7spices_product/product/chines/noodles.jpg" alt="" class="float-img">
+                                    
                                 </a>
+                                <!--  -->
+                                <a href="#" class="list-item">
+                                    <div class="row align-items-center">
+                                        <div class="col-lg-1 mb-auto">
+                                            <span class="num sub-font"> 06. </span>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <div class="main-inf">
+                                                <div class="img">
+                                                    <img src="assets/img/7spices_product/product/chines/chill chicken.jpg" alt="CHILLY CHICKEN" class="img-cover">
+                                                </div>
+                                                <div class="inf">
+                                                    <h6 class="fsz-20 mb-15"> CHILLY CHICKEN <br>
+                                                        <span class="price">
+                                                            <div class="new-price fsz-24 text-white"> $160.00 </div>
+                                                            <div class="old-price fsz-16 text-decoration-line-through"> $180.00 </div>
+                                                        </span>
+                                                    </h6>
+                                                   
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-5">
+                                            <div class="cont text-lg-center">
+                                            
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#orderModal" onclick="setModalData(' CHILLY CHICKEN',160)">
+                                                Order Now
+                                               </button>  
+                                        </div>
+                                    </div>
+                                   
+                                </a>
+                                <a href="#" class="list-item">
+                                    <div class="row align-items-center">
+                                        <div class="col-lg-1 mb-auto">
+                                            <span class="num sub-font"> 07. </span>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <div class="main-inf">
+                                                <div class="img">
+                                                    <img src="assets/img/7spices_product/product/chines/chill panner.jpg" alt="PANEER BUTTER MASALA" class="img-cover">
+                                                </div>
+                                                <div class="inf">
+                                                    <h6 class="fsz-20 mb-15"> PANEER BUTTER MASALA <br>
+                                                        
+                                             <span class="price">   
+                                                <div class="new-price fsz-24 text-white"> $140.00 </div>
+                                                <div class="old-price fsz-16 text-decoration-line-through"> $155.00 </div>
+                                             </span>
+                                                    
+                                                    </h6>
+                                                    
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-5">
+                                            <div class="cont text-lg-center">
+                                               
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-2">
+                                           
+                                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#orderModal" onclick="setModalData(' PANEER BUTTER MASALA ',140)">
+                                                    Order Now
+                                                   </button> 
+
+                                        </div>
+                                    </div>
+                                 
+                                </a>
+                                <a href="#" class="list-item">
+                                    <div class="row align-items-center">
+                                        <div class="col-lg-1 mb-auto">
+                                            <span class="num sub-font"> 08. </span>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <div class="main-inf">
+                                                <div class="img">
+                                                    <img src="assets/img/7spices_product/product/chines/fried rice.jpg" alt=" MIXED FRIED RICE" class="img-cover">
+                                                </div>
+                                                <div class="inf">
+                                                    <h6 class="fsz-20 mb-15"> MIXED FRIED RICE <br>
+                                                        <span class="price">
+                                                            <div class="new-price fsz-24 text-white"> $160.00 </div>
+                                                            <div class="old-price fsz-16 text-decoration-line-through"> $180.00 </div>
+                                                            <div class="discount"> 20% Off </div>
+                                                        </span>
+                                                    </h6>
+                                                 
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-5">
+                                            <div class="cont text-lg-center">
+                                               
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#orderModal" onclick="setModalData(' MIXED FRIED RICE ',160)">
+                                                Order Now
+                                               </button> 
+                                        </div>
+                                    </div>
+                                   
+                                </a>
+                                <a href="#" class="list-item">
+                                    <div class="row align-items-center">
+                                        <div class="col-lg-1 mb-auto">
+                                            <span class="num sub-font"> 09. </span>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <div class="main-inf">
+                                                <div class="img">
+                                                    <img src="assets/img/7spices_product/product/chines/gobi.jpg" alt="" class="img-cover">
+                                                </div>
+                                                <div class="inf">
+                                                    <h6 class="fsz-20 mb-15">CHILLI GOBI (DRY/GRAVY) <br>
+                                                        <span class="price">
+
+                                                            <div class="new-price fsz-24 text-white"> $120.00 </div>
+                                                            <div class="old-price fsz-16 text-decoration-line-through"> $135.00 </div>
+                                                            <div class="discount bg-brown1"> Special </div>
+                                                        </span>
+
+                                                    </h6>
+                                                  
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-5">
+                                            <div class="cont text-lg-center">
+                                                
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#orderModal" onclick="setModalData('CHILLI GOBI (DRY/GRAVY)  ',120)">
+                                                Order Now
+                                               </button> 
+                                           
+                                        </div>
+                                    </div>
+                                   
+                                </a>
+                                <a href="#" class="list-item">
+                                    <div class="row align-items-center">
+                                        <div class="col-lg-1 mb-auto">
+                                            <span class="num sub-font"> 10. </span>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <div class="main-inf">
+                                                <div class="img">
+                                                    <img src="assets/img/7spices_product/product/chines/noodles.jpg" alt="" class="img-cover">
+                                                </div>
+                                                <div class="inf">
+                                                    <h6 class="fsz-20 mb-15">MIXED NOODLES <br>
+                                                        
+                                                        <span class="price">
+                                                            <div class="new-price fsz-24 text-white"> $160.00 </div>
+                                                            <div class="old-price fsz-16 text-decoration-line-through"> $170.00 </div>
+                                                        </span>
+                                                    
+                                                    
+                                                    </h6>
+                                                  
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-5">
+                                            <div class="cont text-lg-center">
+                                               
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-2">
+                                                 
+                                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#orderModal" onclick="setModalData('MIXED NOODLES',160)">
+                                                Order Now
+                                               </button> 
+                                                 
+                                        </div>
+                                    </div>
+                                    
+                                </a>
+                                <!--  -->
                             </div>
                             <div class="text-center mt-50">
-                                <a href="#" class="butn bg-brown1 text-white rounded-pill size-1 hover-bg-dark1 mx-2"> <span> View all + </span> </a>
+                                <a href="#" id="readMoreButton" class="butn bg-brown1 text-white rounded-pill size-1 hover-bg-dark1 mx-2"> <span> Read More + </span> </a>
                             </div>
                         </div>
                         <div class="tab-pane fade " id="pills-tab4">
@@ -775,7 +1054,12 @@
                                                     <img src="assets/img/7spices_product/product/juice/fresh lime.jpg" alt="fresh lime" class="img-cover">
                                                 </div>
                                                 <div class="inf">
-                                                    <h6 class="fsz-20 mb-15"> FRESH LIME  </h6>
+                                                    <h6 class="fsz-20 mb-15"> FRESH LIME  <br>
+                                                        <span class="price">
+                                                            <div class="new-price fsz-24 text-white"> $20.00 </div>
+                                                            <div class="old-price fsz-16 text-decoration-line-through"> $30.00 </div>
+                                                        </span>
+                                                    </h6>
                                                    
                                                 </div>
                                             </div>
@@ -786,13 +1070,13 @@
                                             </div>
                                         </div>
                                         <div class="col-lg-2">
-                                            <div class="price">
-                                                <div class="new-price fsz-24 text-white"> $20.00 </div>
-                                                <div class="old-price fsz-16 text-decoration-line-through"> $30.00 </div>
-                                            </div>
+                                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#orderModal" onclick="setModalData('FRESH LIME ', 20)">
+                                                Order Now
+                                            </button>  
+                                            
                                         </div>
                                     </div>
-                                    <img src="assets/img/7spices_product/product/juice/fresh lime.jpg" alt="" class="float-img">
+                                   
                                 </a>
                                 <a href="#" class="list-item">
                                     <div class="row align-items-center">
@@ -805,7 +1089,13 @@
                                                     <img src="assets/img/7spices_product/product/juice/grape.jpg" alt="" class="img-cover">
                                                 </div>
                                                 <div class="inf">
-                                                    <h6 class="fsz-20 mb-15"> GRAPE </h6>
+                                                    <h6 class="fsz-20 mb-15"> GRAPE <br>
+                                                        <span class="price">
+                                                            <div class="new-price fsz-24 text-white"> $60.00 </div>
+                                                            <div class="old-price fsz-16 text-decoration-line-through"> $60.00 </div>
+                                                        </span>
+
+                                                    </h6>
                                                     <!-- <p class="fsz-16"> Lorem ipsum dolor sit amet, exand to consectetur </p> -->
                                                 </div>
                                             </div>
@@ -816,13 +1106,14 @@
                                             </div>
                                         </div>
                                         <div class="col-lg-2">
-                                            <div class="price">
-                                                <div class="new-price fsz-24 text-white"> $60.00 </div>
-                                                <div class="old-price fsz-16 text-decoration-line-through"> $60.00 </div>
-                                            </div>
+                                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#orderModal" onclick="setModalData('FRESH LIME ', 20)">
+                                                Order Now
+                                            </button>  
+                                            
+                                          
                                         </div>
                                     </div>
-                                    <img src="assets/img/7spices_product/product/juice/watermelon.jpg" alt="" class="float-img">
+                                   
                                 </a>
                                 <a href="#" class="list-item">
                                     <div class="row align-items-center">
@@ -835,7 +1126,13 @@
                                                     <img src="assets/img/7spices_product/product/juice/watermelon.jpg" alt="" class="img-cover">
                                                 </div>
                                                 <div class="inf">
-                                                    <h6 class="fsz-20 mb-15"> WATERMELON </h6>
+                                                    <h6 class="fsz-20 mb-15"> WATERMELON <br>
+                                                        <span class="price">
+                                                            <div class="new-price fsz-24 text-white"> $40.00 </div>
+                                                            <div class="old-price fsz-16 text-decoration-line-through"> $45.00 </div>
+                                                            <div class="discount"> 20% Off </div>
+                                                        </span>
+                                                    </h6>
                                                     
                                                 </div>
                                             </div>
@@ -846,14 +1143,13 @@
                                             </div>
                                         </div>
                                         <div class="col-lg-2">
-                                            <div class="price">
-                                                <div class="new-price fsz-24 text-white"> $40.00 </div>
-                                                <div class="old-price fsz-16 text-decoration-line-through"> $45.00 </div>
-                                                <div class="discount"> 20% Off </div>
-                                            </div>
+                                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#orderModal" onclick="setModalData('WATERMELON ', 40)">
+                                                Order Now
+                                            </button>
+                                           
                                         </div>
                                     </div>
-                                    <img src="assets/img/7spices_product/product/juice/watermelon.jpg" alt="" class="float-img">
+                                  
                                 </a>
                                 <a href="#" class="list-item">
                                     <div class="row align-items-center">
@@ -866,7 +1162,14 @@
                                                     <img src="assets/img/7spices_product/product/juice/orange.jpg" alt="" class="img-cover">
                                                 </div>
                                                 <div class="inf">
-                                                    <h6 class="fsz-20 mb-15"> ORANGE </h6>
+                                                    <h6 class="fsz-20 mb-15"> ORANGE <br>
+                                                        <span class="price">
+                                                
+                                                            <div class="new-price fsz-24 text-white"> $60.00 </div>
+                                                            <div class="old-price fsz-16 text-decoration-line-through"> $60.00 </div>
+                                                            <div class="discount bg-brown1"> Special </div>
+                                                        </span>
+                                                    </h6>
                                                    
                                                 </div>
                                             </div>
@@ -877,14 +1180,13 @@
                                             </div>
                                         </div>
                                         <div class="col-lg-2">
-                                            <div class="price">
-                                                <div class="new-price fsz-24 text-white"> $60.00 </div>
-                                                <div class="old-price fsz-16 text-decoration-line-through"> $60.00 </div>
-                                                <div class="discount bg-brown1"> Special </div>
-                                            </div>
+                                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#orderModal" onclick="setModalData('WATERMELON ', 40)">
+                                                Order Now
+                                            </button>
+                                            
                                         </div>
                                     </div>
-                                    <img src="assets/img/7spices_product/product/juice/orange.jpg" alt="" class="float-img">
+                                    
                                 </a>
                                 <a href="#" class="list-item">
                                     <div class="row align-items-center">
@@ -897,7 +1199,12 @@
                                                     <img src="assets/img/7spices_product/product/juice/pineapple.jpg" alt="" class="img-cover">
                                                 </div>
                                                 <div class="inf">
-                                                    <h6 class="fsz-20 mb-15">PINEAPPLE </h6>
+                                                    <h6 class="fsz-20 mb-15">PINEAPPLE <br>
+                                                        <span class="price">
+                                                            <div class="new-price fsz-24 text-white"> $50.00 </div>
+                                                            <div class="old-price fsz-16 text-decoration-line-through"> $8.00 </div>
+                                                        </span>
+                                                    </h6>
                                                   
                                                 </div>
                                             </div>
@@ -908,59 +1215,23 @@
                                             </div>
                                         </div>
                                         <div class="col-lg-2">
-                                            <div class="price">
-                                                <div class="new-price fsz-24 text-white"> $5.00 </div>
-                                                <div class="old-price fsz-16 text-decoration-line-through"> $8.00 </div>
-                                            </div>
+                                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#orderModal" onclick="setModalData('PINEAPPLE ', 50)">
+                                                Order Now
+                                            </button>
+                                            
                                         </div>
                                     </div>
-                                    <img src="assets/img/7spices_product/product/juice/pineapple.jpg" alt="" class="float-img">
+                                    
                                 </a>
                             </div>
                             <div class="text-center mt-50">
-                                <a href="#" class="butn bg-brown1 text-white rounded-pill size-1 hover-bg-dark1 mx-2"> <span> View all + </span> </a>
+                                <a href="#" class="butn bg-brown1 text-white rounded-pill size-1 hover-bg-dark1 mx-2"> <span> Read More + </span> </a>
                             </div>
                         </div>
                     </div>
                 </div>
             </section>
             <!--  End menus  -->
-
-
-   
-
-            <!--  Start testimonials  -->
-            <section class="tc-testimonials-st2">
-                <div class="container wow fadeInUp slow" data-wow-delay="0.2s">
-                    <div class="title mb-40">
-                        <h2 class="col-lg-4 mx-auto"> <img src="assets/img/icons/qt.svg" alt="" class="icon"> What Client Says? </h2>
-                    </div>
-                    <div class="testimonials-slider">
-                        <div class="swiper-wrapper">
-                            <div class="swiper-slide">
-                                <div class="info col-lg-8 mx-auto">
-                                    <div class="main-text"> Nullam sit amet sem metus. Nam nec metus eudia viverra nec nibh. Donec euismod malesuada, quis egestas eget. Vivmus quam erat slliitudin. </div>
-                                    <div class="user-inf">
-                                        <div class="avatar">
-                                            <img src="assets/img/avatar.jpg" alt="" class="img-cover">
-                                        </div>
-                                        <div class="inf">
-                                            <h6 class="fsz-24 mb-2"> Liam Olivia </h6>
-                                            <p class="cr-brown1"> Restaurant Clients </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="swiper-button-prev"></div>
-                        <div class="swiper-button-next"></div>
-                    </div>
-                </div>
-                <img src="assets/img/testi_bg.png" alt="" class="shaps">
-                <img src="assets/img/testi_lines.png" alt="" class="lines">
-            </section>
-            <!--  End testimonials  -->
-
 
 
         </main>
@@ -1052,8 +1323,92 @@
         <i class="fal fa fa-angle-up"></i>
     </a>
     <!--  End to top button  -->
-
+    <div class="container">
+        <div class="row">
+              <div class="col-lg-12">
+                <div class="modal fade" id="orderModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="productTitle"></h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <!-- form -->
+                            <form action="" method="post">
+                                <div class="modal-body">
+                                    <div class="row">
+                                        <div class="col-lg-4">
+                                            <h5>Qty</h5>
+                                        </div>
+                                        <div class="col-lg-8">
+                                            <span><button type="button" class="btn btn-dark me-3" onclick="changeQuantity(1)">+</button></span>
+                                            <span class="qty-mark me-3" id="quantity">1</span>
+                                            <span><button type="button" class="btn btn-dark me-3" onclick="changeQuantity(-1)">-</button></span>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-3">
+                                        <div class="col-lg-4">
+                                            <h5>Price</h5>
+                                        </div>
+                                        <div class="col-lg-8">
+                                            <span class="total-price" id="totalPrice"></span>
+                                        </div>
+                                    </div>
+    
+                                </div>
+                               
+                                <div class="row mt-3">
+                                    <div class="col-lg-12">
+                                        <input type="text" class="form-control"  placeholder="Enter Username">
+                                    </div>
+                                 
+                                </div>
+                                <div class="row mt-3">
+                                    <div class="col-lg-6">
+                                        <input type="tel" class="form-control"  placeholder="Enter Contact Number">
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <input type="email" class="form-control"  placeholder="Enter Email">
+                                    </div>
+                                </div>
+                                <div class="row mt-3">
+                                    <div class="col-lg-12">
+                                        <select class="form-control" id="payment-method">
+                                            <option value="" selected disabled>Payment Method</option>
+                                            <option value="cash on Delivery">Cash on Delivery</option>
+                                            <option value="upi">UPI and QR Codes</option>
+                                        </select>
+                                        <div class="qr-code hidden" id="qr-code-container">
+                                            <img src="./assets/img/7spices_product/qr-code.png" class="qr-code1" alt="QR Code">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mt-3">
+                                    <div class="col-lg-12">
+                                        <input type="text" class="form-control"  placeholder="Enter Landmark">
+                                    </div>
+                                </div>
+                                <div class="row mt-3">
+                                    <div class="col-lg-12">
+                                        <textarea class="form-control" placeholder="Enter Address" row="4" col="10"></textarea>
+                                    </div>
+                                </div>
+                                
+                                <div class="modal-footer mt-5">
+                                  
+                                    <input type="submit" class="btn btn-primary" value="Payment Now">
+                                </div>
+                            </form>
+                           
+                        </div>
+                    </div>
+                </div>
+              </div>
+        </div>
+    </div>
   <!--  request  -->
+
+
   <script src="./common/assets/js/lib/jquery-3.0.0.min.js"></script>
   <script src="./common/assets/js/lib/jquery-migrate-3.0.0.min.js"></script>
   <script src="./common/assets/js/lib/bootstrap.bundle.min.js"></script>
@@ -1075,6 +1430,7 @@
 
   <!-- ===== home scripts ===== -->
   <script src="./assets/js/inner_pages.js"></script>
+  <script src="./common/assets/js/order.js"></script>
 
 </body>
 

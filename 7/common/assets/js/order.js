@@ -15,4 +15,12 @@ let currentPrice = 0;
         document.getElementById('totalPrice').innerText = '$' + (currentPrice * quantity).toFixed(2);
     }
 
-  
+    $(document).ready(function() {
+        $('#payment-method').on('change', function() {
+            if ($(this).val() === 'upi') {
+                $('#qr-code-container').removeClass('hidden');
+            } else {
+                $('#qr-code-container').addClass('hidden');
+            }
+        });
+    });

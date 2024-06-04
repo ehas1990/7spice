@@ -2575,3 +2575,25 @@ input:focus {
   border: 1px dashed #a77617 !important;
   padding:15px 15px;
 }
+.qr-code {
+ 
+
+  height: 300px;
+  justify-content: center;
+  justify-items: center;
+  justify-self: center;
+  text-align: center;
+  display: flex;
+ justify-items: center;
+  align-content: center;
+  align-content: center;
+  align-self: center;
+  padding: 50px;
+}
+.hidden {
+  display: none;
+}
+.total-price
+{
+  font-size:30px !important;
+}

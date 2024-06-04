@@ -14,7 +14,7 @@
 
     <!-- Title  -->
     <title>Seven Spices Restaurants </title>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
  <!-- Favicon -->
  <link rel="shortcut icon" href="assets/img/fav.png" title="Favicon" sizes="16x16">
 
@@ -330,22 +330,22 @@
                             <button class="nav-link active" id="pills-tab1-tab" data-bs-toggle="pill" data-bs-target="#pills-tab">All</button>
                         </li> -->
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="pills-tab2-tab" data-bs-toggle="pill" data-bs-target="#pills-tab1">BREAK FAST</button>
+                            <button class="nav-link" id="pills-tab-tab" data-bs-toggle="pill" data-bs-target="#pills-tab1">BREAK FAST</button>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="pills-tab3-tab" data-bs-toggle="pill" data-bs-target="#pills-tab2">LUNCH</button>
+                            <button class="nav-link" id="pills-tab1-tab" data-bs-toggle="pill" data-bs-target="#pills-tab2">LUNCH</button>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="pills-tab4-tab" data-bs-toggle="pill" data-bs-target="#pills-tab3"> CHINESS</button>
+                            <button class="nav-link" id="pills-tab2-tab" data-bs-toggle="pill" data-bs-target="#pills-tab3"> CHINESS</button>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="pills-tab5-tab" data-bs-toggle="pill" data-bs-target="#pills-tab4">JUICE</button>
+                            <button class="nav-link" id="pills-tab3-tab" data-bs-toggle="pill" data-bs-target="#pills-tab4">JUICE</button>
                       </li>
                     </ul>
                     <div class="tab-content wow fadeInUp slow" data-wow-delay="0.2s" id="pills-tabContent">
                         
                       
-                        <div class="tab-pane fade show active" id="pills-tab1">
+                        <div class="tab-pane fade show active " id="pills-tab1">
                             <div class="menu-list">
                                 <a href="#" class="list-item">
                                     <div class="row align-items-center">
@@ -889,7 +889,7 @@
                                                     <img src="assets/img/7spices_product/product/chines/noodles.jpg" alt="" class="img-cover">
                                                 </div>
                                                 <div class="inf">
-                                                    <h6 class="fsz-20 mb-15">MIXED NOODLES 
+                                                    <h6 class="fsz-20 mb-15">MIXED NOODLES <br>
                                                         
                                                         <span class="price">
                                                             <div class="new-price fsz-24 text-white"> $160.00 </div>
@@ -935,7 +935,12 @@
                                                     <img src="assets/img/7spices_product/product/juice/fresh lime.jpg" alt="fresh lime" class="img-cover">
                                                 </div>
                                                 <div class="inf">
-                                                    <h6 class="fsz-20 mb-15"> FRESH LIME  </h6>
+                                                    <h6 class="fsz-20 mb-15"> FRESH LIME  <br>
+                                                        <span class="price">
+                                                            <div class="new-price fsz-24 text-white"> $20.00 </div>
+                                                            <div class="old-price fsz-16 text-decoration-line-through"> $30.00 </div>
+                                                        </span>
+                                                    </h6>
                                                    
                                                 </div>
                                             </div>
@@ -946,10 +951,10 @@
                                             </div>
                                         </div>
                                         <div class="col-lg-2">
-                                            <div class="price">
-                                                <div class="new-price fsz-24 text-white"> $20.00 </div>
-                                                <div class="old-price fsz-16 text-decoration-line-through"> $30.00 </div>
-                                            </div>
+                                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#orderModal" onclick="setModalData('FRESH LIME ', 20)">
+                                                Order Now
+                                            </button>  
+                                            
                                         </div>
                                     </div>
                                    
@@ -965,7 +970,13 @@
                                                     <img src="assets/img/7spices_product/product/juice/grape.jpg" alt="" class="img-cover">
                                                 </div>
                                                 <div class="inf">
-                                                    <h6 class="fsz-20 mb-15"> GRAPE </h6>
+                                                    <h6 class="fsz-20 mb-15"> GRAPE <br>
+                                                        <span class="price">
+                                                            <div class="new-price fsz-24 text-white"> $60.00 </div>
+                                                            <div class="old-price fsz-16 text-decoration-line-through"> $60.00 </div>
+                                                        </span>
+
+                                                    </h6>
                                                     <!-- <p class="fsz-16"> Lorem ipsum dolor sit amet, exand to consectetur </p> -->
                                                 </div>
                                             </div>
@@ -976,10 +987,11 @@
                                             </div>
                                         </div>
                                         <div class="col-lg-2">
-                                            <div class="price">
-                                                <div class="new-price fsz-24 text-white"> $60.00 </div>
-                                                <div class="old-price fsz-16 text-decoration-line-through"> $60.00 </div>
-                                            </div>
+                                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#orderModal" onclick="setModalData('FRESH LIME ', 20)">
+                                                Order Now
+                                            </button>  
+                                            
+                                          
                                         </div>
                                     </div>
                                    
@@ -995,7 +1007,13 @@
                                                     <img src="assets/img/7spices_product/product/juice/watermelon.jpg" alt="" class="img-cover">
                                                 </div>
                                                 <div class="inf">
-                                                    <h6 class="fsz-20 mb-15"> WATERMELON </h6>
+                                                    <h6 class="fsz-20 mb-15"> WATERMELON <br>
+                                                        <span class="price">
+                                                            <div class="new-price fsz-24 text-white"> $40.00 </div>
+                                                            <div class="old-price fsz-16 text-decoration-line-through"> $45.00 </div>
+                                                            <div class="discount"> 20% Off </div>
+                                                        </span>
+                                                    </h6>
                                                     
                                                 </div>
                                             </div>
@@ -1006,11 +1024,10 @@
                                             </div>
                                         </div>
                                         <div class="col-lg-2">
-                                            <div class="price">
-                                                <div class="new-price fsz-24 text-white"> $40.00 </div>
-                                                <div class="old-price fsz-16 text-decoration-line-through"> $45.00 </div>
-                                                <div class="discount"> 20% Off </div>
-                                            </div>
+                                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#orderModal" onclick="setModalData('WATERMELON ', 40)">
+                                                Order Now
+                                            </button>
+                                           
                                         </div>
                                     </div>
                                   
@@ -1026,7 +1043,14 @@
                                                     <img src="assets/img/7spices_product/product/juice/orange.jpg" alt="" class="img-cover">
                                                 </div>
                                                 <div class="inf">
-                                                    <h6 class="fsz-20 mb-15"> ORANGE </h6>
+                                                    <h6 class="fsz-20 mb-15"> ORANGE <br>
+                                                        <span class="price">
+                                                
+                                                            <div class="new-price fsz-24 text-white"> $60.00 </div>
+                                                            <div class="old-price fsz-16 text-decoration-line-through"> $60.00 </div>
+                                                            <div class="discount bg-brown1"> Special </div>
+                                                        </span>
+                                                    </h6>
                                                    
                                                 </div>
                                             </div>
@@ -1037,11 +1061,10 @@
                                             </div>
                                         </div>
                                         <div class="col-lg-2">
-                                            <div class="price">
-                                                <div class="new-price fsz-24 text-white"> $60.00 </div>
-                                                <div class="old-price fsz-16 text-decoration-line-through"> $60.00 </div>
-                                                <div class="discount bg-brown1"> Special </div>
-                                            </div>
+                                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#orderModal" onclick="setModalData('WATERMELON ', 40)">
+                                                Order Now
+                                            </button>
+                                            
                                         </div>
                                     </div>
                                     
@@ -1057,7 +1080,12 @@
                                                     <img src="assets/img/7spices_product/product/juice/pineapple.jpg" alt="" class="img-cover">
                                                 </div>
                                                 <div class="inf">
-                                                    <h6 class="fsz-20 mb-15">PINEAPPLE </h6>
+                                                    <h6 class="fsz-20 mb-15">PINEAPPLE <br>
+                                                        <span class="price">
+                                                            <div class="new-price fsz-24 text-white"> $50.00 </div>
+                                                            <div class="old-price fsz-16 text-decoration-line-through"> $8.00 </div>
+                                                        </span>
+                                                    </h6>
                                                   
                                                 </div>
                                             </div>
@@ -1068,10 +1096,10 @@
                                             </div>
                                         </div>
                                         <div class="col-lg-2">
-                                            <div class="price">
-                                                <div class="new-price fsz-24 text-white"> $5.00 </div>
-                                                <div class="old-price fsz-16 text-decoration-line-through"> $8.00 </div>
-                                            </div>
+                                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#orderModal" onclick="setModalData('PINEAPPLE ', 50)">
+                                                Order Now
+                                            </button>
+                                            
                                         </div>
                                     </div>
                                     
@@ -1212,40 +1240,47 @@
         <i class="fal fa fa-angle-up"></i>
     </a>
     <!--  End to top button  -->
-    <div class="modal fade" id="orderModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="productTitle"></h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-lg-4">
-                            <h5>Qty</h5>
-                        </div>
-                        <div class="col-lg-8">
-                            <span><button type="button" class="btn btn-dark me-3" onclick="changeQuantity(1)">+</button></span>
-                            <span class="qty-mark me-3" id="quantity">1</span>
-                            <span><button type="button" class="btn btn-dark me-3" onclick="changeQuantity(-1)">-</button></span>
+    <div class="container">
+        <div class="row">
+              <div class="col-lg-12">
+                <div class="modal fade" id="orderModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="productTitle"></h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-lg-4">
+                                        <h5>Qty</h5>
+                                    </div>
+                                    <div class="col-lg-8">
+                                        <span><button type="button" class="btn btn-dark me-3" onclick="changeQuantity(1)">+</button></span>
+                                        <span class="qty-mark me-3" id="quantity">1</span>
+                                        <span><button type="button" class="btn btn-dark me-3" onclick="changeQuantity(-1)">-</button></span>
+                                    </div>
+                                </div>
+                                <div class="row mt-3">
+                                    <div class="col-lg-4">
+                                        <h5>Price</h5>
+                                    </div>
+                                    <div class="col-lg-8">
+                                        <span class="total-price" id="totalPrice"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary">Save changes</button>
+                            </div>
                         </div>
                     </div>
-                    <div class="row mt-3">
-                        <div class="col-lg-4">
-                            <h5>Price</h5>
-                        </div>
-                        <div class="col-lg-8">
-                            <span class="total-price" id="totalPrice"></span>
-                        </div>
-                    </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
-                </div>
-            </div>
+              </div>
         </div>
     </div>
+  
     <!--  request  -->
     <script src="./common/assets/js/lib/jquery-3.0.0.min.js"></script>
     <script src="./common/assets/js/lib/jquery-migrate-3.0.0.min.js"></script>
