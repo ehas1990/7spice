@@ -2575,25 +2575,33 @@ input:focus {
   border: 1px dashed #a77617 !important;
   padding:15px 15px;
 }
-.qr-code {
- 
 
-  height: 300px;
-  justify-content: center;
-  justify-items: center;
-  justify-self: center;
-  text-align: center;
-  display: flex;
- justify-items: center;
-  align-content: center;
-  align-content: center;
-  align-self: center;
-  padding: 50px;
-}
 .hidden {
   display: none;
 }
 .total-price
 {
   font-size:30px !important;
+}
+button.btn.btn-primary ,input.btn.btn-primary{
+  font-size: 13px;
+  color: #fff;
+  padding: 7px 20px;
+  border-radius: 8px;
+  background-color: var(--cr-brown1);
+  margin-top: 10px;
+  display: inline-block;
+  border-color: var(--cr-brown1);
+}
+button.btn-close {
+
+  background-color: #ffffff;
+}
+div#qr-code {
+  justify-content: center;
+  justify-items: center;
+  justify-self: center;
+  align-content: center;
+  align-self: center;
+  text-align: center;
 }
