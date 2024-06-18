@@ -52,3 +52,12 @@ let currentPrice = 0;
         });
     });
     
+    $(document).ready(function(){
+        $('#pills-tab-tab').click(function(){
+            $("#pills-tab1").show();
+        })
+        $("#pills-tab1-tab").click(function(){
+          $("#pills-tab1").hide();
+        });
+    
+      });
